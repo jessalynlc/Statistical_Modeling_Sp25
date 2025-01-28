@@ -1,0 +1,121 @@
+---
+title: "Week 2 Assignment"
+author: "Jessalyn Chuang"
+output: pdf_document
+geometry: margin=2.54cm
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load necessary packages.
+library(here)
+library(tidyverse)
+library(viridis)
+```
+
+# (1) Measures of location and data spread
+
+```{r}
+# Load necessary data.
+crab_data <- read_csv(file=here("Labs/week2/pie_crab.csv"))
+mean(crab_data$size)
+median(crab_data$size)
+sd(crab_data$size)
+```
+
+
+##a. 
+What is the mean fiddler crab carapace size?
+The mean fiddler crab carapace size is 14.65801 mm.
+
+##b. 
+What is the median fiddler crab carapace size?
+The median fiddler crab carapace size is 14.65801 mm.
+
+##c. 
+What is the standard deviation in fiddler crab carapace size?
+The standard deviation in fiddler crab carapace size is 3.503304 mm.
+
+# (2) Creating Histograms
+
+##a. 
+One of the ways to visualize data that we have discussed in class is using histograms. 
+Create a figure that is a histogram of fiddler crab carapace size (across all sites), and take care to make
+sure your figure uses an appropriate number of bins and includes a caption. (Hint: Learn how
+to use the geom_histogram() call to achieve this by typing ?geom_histogram() into your console
+or Google.)
+
+```{r}
+ggplot(data = crab_data, aes(x = size)) +
+  geom_histogram(bins = 15, fill = "lightpink", color = "black") + 
+  labs(x = "Size (mm)",
+       y = "Count",
+       title = "Histogram of Fiddler Crab Carapace Size Across all Sites)")
+```
+
+##b. 
+Create a second figure that now displays separate histograms for fiddler crab carapace size
+for each of the 13 sites. Again, make sure axes are appropriately labeled, and your figure
+includes a caption. (Hint: Use the facet_wrap() call and explore its functionality either in the
+console or via Google.)
+
+```{r}
+ggplot(data = crab_data, aes(x = size)) +
+  geom_histogram(bins = 15, fill = "pink", color = "black") + 
+  facet_wrap(~ site) +  # Create separate histograms for each site
+  labs(x = "Size (mm)",
+       y = "Count",
+       title = "Histogram of Fiddler Crab Carapace Size by Site",
+       caption = "Each panel represents a separate site, showing the distribution of carapace sizes.") 
+```
+
+##c. 
+How do the raw values of fiddler crab carapace size in your first figure compare to the mean
+and median values you calculated above? Based on your second figure, do any sites display
+strong diﬀerences in their data distributions?
+
+The mean and the median values fall into the section of the histogram with the highest count.
+
+Yes, certain sites exhibit strong differences in their data distributions. Here are key observations:
+
+Sites with Distinct Distributions:
+GTM and PIE:
+
+These sites show a strong peak at smaller carapace sizes (~10-15mm), with a right-skewed distribution.
+They have a clear concentration of smaller crabs compared to other sites.
+CT and DB:
+
+These sites exhibit a more symmetric, bell-shaped distribution, suggesting a more even spread of carapace sizes.
+Their distributions resemble a normal distribution.
+ZI and SI:
+
+Both sites have left-skewed distributions, with a higher frequency of smaller sizes.
+The presence of a strong peak at lower sizes (~10mm) differentiates them from other sites.
+RC and NB:
+
+These sites have a broader range of sizes but appear to have bimodal distributions (two peaks), suggesting the presence of multiple size groups.
+Sites with Similar Distributions:
+Sites such as NIB, VCR, and JC show distributions that are more evenly spread, lacking strong skewness or multimodal patterns.
+Their size distributions appear balanced across a range of carapace sizes.
+Conclusion:
+GTM, PIE, ZI, and SI show strong differences, likely due to environmental or biological factors influencing crab growth.
+CT and DB have a symmetrical distribution.
+RC and NB might have bimodal distributions, suggesting possible subpopulations or size classes.
+
+# (3) Data Visualization - the Golden Rules
+
+##a. 
+Make a new plot examining any other relationship you are interested in visualizing using
+
+the dataset. It can be a scatterplot (geom_point()), a jitter plot (geom_jitter()), a boxplot
+(geom_boxplot()), a histogram (geom_histogram()), or any other data display you’d like. Take
+care to follow each of the golden rules of data visualization - Accuracy, Clarity, Aesthestics -
+and be sure to include a descriptive figure caption.
+
+##b. 
+Now, using the same base figure you created above in part a, create the worst version of
+
+that same figure that you possibly can. Think color, font size, replacing points with emojis,
+etc. - the uglier and more confusing the better! You must also include a figure caption, but
+it, too, should be unhelpful.
