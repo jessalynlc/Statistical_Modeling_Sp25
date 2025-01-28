@@ -1,0 +1,93 @@
+---
+title: "week2script"
+output: html_document
+date: "2025-01-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load necessary packages.
+library(here)
+library(tidyverse)
+library(viridis)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+#Setup
+
+```{r}
+bird <- 14
+
+bird
+```
+
+If you would like to create an outline with headings or modify text, you can also use the following notation to
+do so:
+• Use “#” in front of standard text to create headings. The more “#” symbols you use, the smaller the
+headings.
+• Use one set of * surrounding a word to make things italicized and two sets to make things bold.
+• Lists may be created using either a dash symbol or and asterisk.
+
+#Loading and Examining Data
+
+```{r}
+# Load necessary data.
+crab_data <- read_csv(file=here("Labs/week2/pie_crab.csv"))
+# Examine data structure.
+str(crab_data)
+```
+
+#Tidy Data
+
+```{r}
+# Use the select() function to select column(s).
+select(crab_data, air_temp)
+
+# Use the filter() function to filter based on certain conditions.
+filter(crab_data, water_temp > 20)
+
+# Use the mutate() function to rename columns.
+mutate(crab_data, air_water_diff = air_temp- water_temp)
+
+# Create a new dataset called "crab_new".
+# First, start with your original data and then...
+crab_new <- crab_data %>%
+# Create a new column with air and water temperatures multiplied and then...
+mutate(airxwater = air_temp * water_temp) %>%
+# Pull out (filter) entries for the Plum Island Ecosystem study only.
+filter(site== "PIE")
+# End of pipe.
+
+crab_cool <- crab_data %>% 
+  filter(water_temp < 18) %>% 
+  select(site, size)
+```
+
+#Plot Data
+
+```{r}
+ggplot(data = crab_data, aes(x=site, y=size, fill = site)) +
+  geom_boxplot() + 
+  labs(x="Site Location",
+       y = "Size (mm)") +
+  scale_fill_viridis(discrete = TRUE)
+# You can see a list of all the 657 base colors R oﬀers by running colors() in your console.
+```
+
+```{r}
+ggplot(data = crab_data, aes(x = site, y = size,
+fill = site)) + # create base plot
+geom_boxplot() + # add boxplots
+labs(x = "Site Location",
+y = "Size (mm)") + # add labels
+scale_fill_viridis(discrete = TRUE) + # specify values are discrete
+theme_bw() + # remove gray background
+theme(legend.position = "none") # remove legend
+```
+
