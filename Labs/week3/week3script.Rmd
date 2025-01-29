@@ -1,0 +1,134 @@
+---
+title: "week3script"
+output: html_document
+date: "2025-01-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(here)
+library(tidyverse)
+library(moments)
+```
+
+#Discrete Distributions
+
+##Binomial Distributions - models the exact number of successes
+
+```{r}
+#Probability of three successes
+dbinom(x = 3, size = 16, prob = 0.48)
+
+#Probability of 0-16 successes
+prob <- dbinom(x=0:16, size = 16, prob = 0.48)
+
+#Create a list of number of successes
+success <- 0:16
+
+#Bind two columns together to create a dataframe
+binom_df <- cbind(prob, success)
+
+#Create a figure
+ggplot(binom_df, aes(x=success,
+                     y=prob)) +
+  geom_bar(stat = "identity") +
+  labs(x = 'X',
+       y = 'Probability',
+       title = 'The probability of getting 0-16 successes out of 16 trials.')
+
+#Cumulative probability using dbinom
+sum(dbinom(x = 0:3, size = 16, prob = 0.48))
+
+#Cumulative probability using generated data
+#adding together rows 1 through 4
+sum(prob[1:4])
+```
+
+```{r}
+#probability of three or fewer successes
+pbinom(q=3, size=16, prob=0.48)
+```
+
+##Poisson Distributions - models counts of an outcome
+
+dpois(x, lambda), with x occurrences and lambda is the mean rate of occurrence
+
+```{r}
+#Probability of 10 occurrences
+dpois(x = 10, lambda = 3)
+
+#probability of 3 or fewer occurrences
+ppois(q=3, lambda = 3)
+```
+
+#Assessing Normality
+
+```{r}
+#Consider information on how this data was collected
+?beaver1()
+
+#Visually inspect data
+View(beaver1)
+
+#Create a histogram of beaver body temperature
+ggplot(beaver1, aes(x=temp)) +
+  geom_histogram() +
+  labs(x = "Beaver Body Temperature (C)", 
+       y = "Count")
+
+#Note, when we do not assign a plot to a new variable name, and we run the code,
+#it appears in the RMarkdown but not in our Environmnet
+
+#Create a Q-Q plot of beaver body temperature
+ggplot(beaver1, aes(sample = temp))+
+  geom_qq()+
+  geom_qq_line()+
+  labs(x = "Theoretical Normal Distribution",
+       y = "Raw Temperature Values")
+```
+
+Skewness (s): |s| > 1 (highly skewed), 0.5 < |s| < 1 (moderately skewed), 0 < |s| < 0.5 (approximately symmetrical), and s = 0 (perfectly symmetrical)
+
+Kurtosis (k) may range from k > 3 (leptokurtic), k = 3 (mesokurtic), and k < 3 (platykurtic)
+
+```{r}
+#calculate skewness of beaver body temperature
+skewness(beaver1$temp)
+
+#Calculate kurtosis of beaver body temeprature
+kurtosis(beaver1$temp)
+```
+
+#Continuous Probability in R
+##Normal Distributions
+
+```{r}
+#Probability of value < 1
+pnorm(q = 1, mean = 2, sd = 3)
+
+#Create a list of values with lots of values in between whole numbers (so our)
+#curve looks nice and smooth
+values <- seq(-10, 14, length = 1000)
+
+#Probability densities for values -10 to 14
+prob_norm <- dnorm(x = values, mean = 2, sd = 3)
+
+#Bind two columns together to create a dataframe
+norm_df <- cbind(prob_norm, values)
+
+#Create a figure
+ggplot(norm_df, aes(x = values,
+                    y = prob_norm))+
+  geom_line() +
+  labs(x = 'X',
+       y = 'Probability Density',
+       title = "The PDF of X - N(2,3).")
+```
+ 
+```{r}
+#Value of "x" for a given probability
+qnorm(p = 0.80, mean = 2, sd = 3)
+```
+ 
+ 
