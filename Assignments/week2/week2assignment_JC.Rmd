@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(here)
 library(tidyverse)
 library(viridis)
+library(ggtext)
+library(ggplot2)
 ```
 
 # (1) Measures of location and data spread
@@ -31,7 +33,7 @@ The mean fiddler crab carapace size is 14.65801 mm.
 
 ##b. 
 What is the median fiddler crab carapace size?
-The median fiddler crab carapace size is 14.65801 mm.
+The median fiddler crab carapace size is 14.435 mm.
 
 ##c. 
 What is the standard deviation in fiddler crab carapace size?
@@ -51,7 +53,9 @@ ggplot(data = crab_data, aes(x = size)) +
   geom_histogram(bins = 15, fill = "lightpink", color = "black") + 
   labs(x = "Size (mm)",
        y = "Count",
-       title = "Histogram of Fiddler Crab Carapace Size Across all Sites)")
+       title = "Histogram of Fiddler Crab Carapace Size Across all Sites)",
+       caption = "This histogram shows the distribution of Fiddler Crab carapace
+       size across all sites with mean size of 14.658 mm and median of 14.435 mm.")
 ```
 
 ##b. 
@@ -75,47 +79,45 @@ How do the raw values of fiddler crab carapace size in your first figure compare
 and median values you calculated above? Based on your second figure, do any sites display
 strong diﬀerences in their data distributions?
 
-The mean and the median values fall into the section of the histogram with the highest count.
-
-Yes, certain sites exhibit strong differences in their data distributions. Here are key observations:
-
-Sites with Distinct Distributions:
-GTM and PIE:
-
-These sites show a strong peak at smaller carapace sizes (~10-15mm), with a right-skewed distribution.
-They have a clear concentration of smaller crabs compared to other sites.
-CT and DB:
-
-These sites exhibit a more symmetric, bell-shaped distribution, suggesting a more even spread of carapace sizes.
-Their distributions resemble a normal distribution.
-ZI and SI:
-
-Both sites have left-skewed distributions, with a higher frequency of smaller sizes.
-The presence of a strong peak at lower sizes (~10mm) differentiates them from other sites.
-RC and NB:
-
-These sites have a broader range of sizes but appear to have bimodal distributions (two peaks), suggesting the presence of multiple size groups.
-Sites with Similar Distributions:
-Sites such as NIB, VCR, and JC show distributions that are more evenly spread, lacking strong skewness or multimodal patterns.
-Their size distributions appear balanced across a range of carapace sizes.
-Conclusion:
-GTM, PIE, ZI, and SI show strong differences, likely due to environmental or biological factors influencing crab growth.
-CT and DB have a symmetrical distribution.
-RC and NB might have bimodal distributions, suggesting possible subpopulations or size classes.
+Since the mean is slightly larger than the median, this suggests that the overall distribution of fiddler crab carapace size is slightly skewed to the right. The first figure shows the distribution. Meanwhile, the second figure that shows size distributions for individual sites reveals significant site-specific variations that deviate from this general trend. At sites such as ZI and SI, there is more of a concentration of crabs at smaller sizes and very few larger individuals. On the other hand, sites like GTM and PIE have more crabs grow to larger sizes compared to other locations. Some sites, such as DB and CT, show normal-like, symmetric distributions. To summarize, the overall dataset maintains a slight right-skewed distribution while the individual site breakdown indicate different distributions from the whole datset. 
 
 # (3) Data Visualization - the Golden Rules
 
 ##a. 
-Make a new plot examining any other relationship you are interested in visualizing using
+Make a new plot examining any other relationship you are interested in visualizing using the dataset. It can be a scatterplot (geom_point()), a jitter plot (geom_jitter()), a boxplot (geom_boxplot()), a histogram (geom_histogram()), or any other data display you’d like. Take care to follow each of the golden rules of data visualization - Accuracy, Clarity, Aesthestics - and be sure to include a descriptive figure caption.
 
-the dataset. It can be a scatterplot (geom_point()), a jitter plot (geom_jitter()), a boxplot
-(geom_boxplot()), a histogram (geom_histogram()), or any other data display you’d like. Take
-care to follow each of the golden rules of data visualization - Accuracy, Clarity, Aesthestics -
-and be sure to include a descriptive figure caption.
+```{r}
+ggplot(data = crab_data, aes(x = site, y = size, fill = site)) +
+  geom_boxplot(outlier.shape = NA, color = "black", alpha = 0.7) +  # Fill with different colors by site
+  geom_jitter(width = 0.2, alpha = 0.4, color = "black") +  
+  labs(x = "Site",
+       y = "Size (mm)",
+       title = "Fiddler Crab Carapace Size by Site",
+       caption = "Boxplot of fiddler crab carapace sizes across different sites, 
+       with individual data points overlaid using jitter.") +
+  theme_minimal() +
+  theme(legend.position = "none") 
+```
 
 ##b. 
-Now, using the same base figure you created above in part a, create the worst version of
+Now, using the same base figure you created above in part a, create the worst version of that same figure that you possibly can. Think color, font size, replacing points with emojis, etc. - the uglier and more confusing the better! You must also include a figure caption, but it, too, should be unhelpful.
 
-that same figure that you possibly can. Think color, font size, replacing points with emojis,
-etc. - the uglier and more confusing the better! You must also include a figure caption, but
-it, too, should be unhelpful.
+```{r}
+ggplot(data = crab_data, aes(x = site, y = size, fill = site)) +
+  geom_boxplot(outlier.shape = NA, color = "yellow", fill = sample(colors(), 13)) +  # Random ugly colors
+  geom_jitter() +  
+  labs(x = "???",  
+       y = "Numbers",
+       title = "Crabby Sizes",
+       caption = "Data is fun!") +
+  theme(
+    axis.text.x = element_text(size = 3, angle = 90, color = "red"),  # Unreadable x-axis
+    axis.text.y = element_text(size = 15, face = "italic", color = "blue"),  # Huge y-axis
+    plot.caption = element_text(size = 20, color = "green"),  # Oversized, distracting caption
+    panel.background = element_rect(fill = "hotpink"),
+    legend.position = "top",  # Moves legend to a useless place
+    legend.background = element_rect(fill = "black"),
+    legend.text = element_text(size = 2, color = "white")  # Impossible to read legend text
+  )
+```
+
