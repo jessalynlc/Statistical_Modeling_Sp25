@@ -1,0 +1,56 @@
+---
+title: "week3assignment_JC"
+output: html_document
+date: "2025-01-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#(1) Discrete Probability Distributions
+
+a. Say you flip a fair, unweighted coin 20 times. What is the probability of obtaining 5 or fewer heads?
+
+```{r}
+prob <- pbinom(q = 5, size = 20, prob = 0.50)
+print(paste("The probability of obtaining 5 or fewer heads is", round(prob, 3)))
+```
+
+b. Now, you switch to an unfair, weighted coin whose probability of landing on heads is 80%. If you flip the new, weighted coin 15 times, what is the probability of obtaining 10 or more heads?
+
+For this question, I calculated the probability of 10 or more heads.
+
+```{r}
+# Find P(X >= 10) using the complement rule: P(X >= 10) = 1 - P(X <= 9)
+unfair_prob <- 1 - pbinom(q = 9, size = 15, prob = 0.80)
+print(paste("The probability of obtaining 10 or more heads is", round(unfair_prob, 3)))
+```
+
+c. Many busy ocean shipping routes overlap with key whale migratory routes along the coast. In the Santa Barbara Channel, the mean number of whale strikes (by shipping vessels) is 12 per year. What is the probability that only 6 whale strikes will occur this coming year? What is the probability that 6 or fewer whale strikes will occur this coming year?
+
+```{r}
+prob_only_6 <- dpois(x = 6, lambda = 6)
+prob_6_or_fewer <- ppois(q = 6, lambda = 6)
+
+print(paste("The probability of only 6 whale strikes is", round(prob_only_6, 3)))
+print(paste("The probability of 6 or fewer whale strikes is", round(prob_6_or_fewer, 3)))
+```
+
+#2. Assessing Normality
+
+a. Each year since 1994, the Konza Prairie Biologicl Station in Kansas rounds up a herd of 300+ bison to weigh and ID each individual. Bison display sexual dimorphism, meaning males are typically much larger than females. In addition, there is a strong, positive relationship between age (in years) and weight (in pounds). We are interested in seeing whether the weights of adult bison (age > 3 years) are normally distributed.
+
+Load in the knz_bison.csv dataset and examine the data using the View() function. Create a new dataset to filter for records only from adult bison (age > 3 years). Then, create a histogram and a quantile-quantile plot examining the distribution of weights of adult bison. Make sure you use an appropriate number of bins in your histogram and taht both figures include proper axes labels and captions.
+
+```{r}
+
+```
+
+b. For the same bison data, calculate and report the skewness and kurtosis values for the weight of adult bison.
+
+```{r}
+
+```
+
+c, Based on the information provided, your figures, and your analyses, explain in 1-2 sentences why you would or would not assume these data are normally distributed.
