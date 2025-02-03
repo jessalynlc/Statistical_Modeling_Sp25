@@ -1,7 +1,9 @@
 ---
 title: "week3assignment_JC"
-output: html_document
+author: "Jessalyn Chuang"
+output: pdf_document
 date: "2025-01-29"
+geometry: margin=2.54cm
 ---
 
 ```{r setup, include=FALSE}
@@ -34,8 +36,8 @@ print(paste("The probability of obtaining 10 or more heads is", round(unfair_pro
 c.  Many busy ocean shipping routes overlap with key whale migratory routes along the coast. In the Santa Barbara Channel, the mean number of whale strikes (by shipping vessels) is 12 per year. What is the probability that only 6 whale strikes will occur this coming year? What is the probability that 6 or fewer whale strikes will occur this coming year?
 
 ```{r}
-prob_only_6 <- dpois(x = 6, lambda = 6)
-prob_6_or_fewer <- ppois(q = 6, lambda = 6)
+prob_only_6 <- dpois(x = 6, lambda = 12)
+prob_6_or_fewer <- ppois(q = 6, lambda = 12)
 
 print(paste("The probability of only 6 whale strikes is", round(prob_only_6, 3)))
 print(paste("The probability of 6 or fewer whale strikes is", round(prob_6_or_fewer, 3)))
@@ -120,7 +122,7 @@ print(paste("The probability of capturing an adult, female bison weighing less t
 #female bison weighing between 900 and 1100 pounds
 female_bison_less_1100 <- pnorm(q = 1100, mean = mean_female, sd = sd_female)
 female_bison_900_1100 <- female_bison_less_1100 - female_bison_less_900
-print(paste("The probability of capturing an adult, female bison weighing between 900 and 1100 pounds is", round(female_bison_900_1100,2)))
+print(paste("The probability of capturing an adult, female bison weighing 900-1100 pounds is", round(female_bison_900_1100,2)))
 
 #value below which 95% of adult female bison are expected to weigh
 print(paste("The weight below which 95% of adult female bison are expected to weigh is", round(qnorm(p = 0.95, mean = mean_female, sd = sd_female),2), "lbs."))
