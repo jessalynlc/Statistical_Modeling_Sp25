@@ -1,0 +1,94 @@
+---
+title: "week4script"
+output: html_document
+date: "2025-02-05"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(here)
+library(dplyr)
+library(moments)
+```
+
+## R Markdown
+
+```{r}
+weather_data <- read.csv(file = here("./Labs/week4/arc_weather.csv"),
+                           stringsAsFactors = TRUE)   
+str(weather_data)
+```
+
+```{r rename}
+#weather_data <- weather_data %>% rename(daily_precip_mm = daily_precip)
+
+#names(weather_data) <- c("1", "2", "3", "4", "5")
+
+weather_data <- weather_data %>% mutate(snow_days = case_when(mean_airtemp < 0 & daily_precip > 0 ~ "SNOW", TRUE ~ "NO SNOW"))
+
+weather_data <- weather_data %>% mutate(snow_days = ifelse(mean_airtemp < 0 & daily_precip >0, "SNOW", "NO SNOW"))
+
+weather_data <- weather_data %>% mutate(windy = case_when(mean_windspeed >4 ~"WINDY", TRUE~"NOT WINDY"))
+```
+
+#CIS for Continuous Data
+```{r}
+precip_test <- t.test(wehater_data$daily_precip, conf.level = 90)
+
+precip_test
+```
+
+#CIs for binary data
+
+```{r}
+vote_test <- binom.test(x = 187, n= 254, conf.level = 0.9)
+
+vote_test
+```
+
+#One-sample Hypothesis Tests
+
+##Two-sided
+
+```{r}
+precip_ttest1 <- t.test(weather_data$daily_precip, mu =2 , conf.level = 0.99, alternative = "two.sided")
+
+precip_ttest1
+```
+
+##One-Sided
+
+```{r}
+precip_ttest2 <- t.test(weather_data$daily_precip, mu = 1, conf.level = 0.99, alternative = "greater")
+
+precip_ttest2
+```
+
+```{r}
+library(dplyr)
+
+weather_data <- weather_data %>%
+  mutate(date = as.Date(date),  # Convert factor to Date
+         time_period = case_when(
+           date < as.Date("2003-01-01") ~ "early",
+           date >= as.Date("2003-01-01") ~ "late",
+           TRUE ~ NA_character_
+         ))
+
+early_data <-  weather_data %>% filter(time_period == "early")
+
+late_data <- weather_data %>% filter(time_period == "late")
+```
+
+```{r}
+precip_vartest <- var.test(x = early_data$daily_precip, y = late_data$daily_precip, alternative = "two.sided", conf.level = 0.95)
+
+precip_vartest
+```
+
+```{r}
+precip_ttest3 <- t.test(early_data$daily_precip, late_data$daily_precip)
+precip_ttest3
+```
+
