@@ -1,7 +1,7 @@
 ---
 title: "week4assignment_JC"
 output: pdf_document
-date: "2025-02-05"
+date: "2025-02-11"
 ---
 
 ```{r setup, include=FALSE}
@@ -24,32 +24,45 @@ urchins_data <- read.csv(file = here("./Assignments/week4/urchins.csv"),
 urchins_data <- urchins_data[,c("YEAR", "MONTH", "SITE", "TREATMENT", "SIZE", 
                                 "COUNT", "COMMON_NAME")]
 
-urchins_data <- filter(urchins_data, SITE == "MOHK" & (YEAR == 2015 | YEAR == 2016))
+urchins_data <- filter(urchins_data, SITE == "MOHK" & COMMON_NAME == "Red Urchin" & (YEAR == 2015 | YEAR == 2016))
 
 urchins_data <- expand.dft(urchins_data, freq = "COUNT")
 ```
 
 ##b. Histogram of size distributions of red urchins in 2015 and 2016
 
-ASK ABOUT NUM OF BINS HERE?
-
-To find the number of bins, use Rice's rule:
-In 2015, n = 773: 2*773^(1/3) = 18.35
-In 2016, n = 400: 2*400^(1/3) = 14.74
-
-Average between the two is number of bins: 16.5 --> 17
-
 ```{r}
+n_2015 <- sum(urchins_data$YEAR == 2015)
+n_2016 <- sum(urchins_data$YEAR == 2016)
+range_2015 <- urchins_data %>%
+  filter(YEAR == 2015) %>%
+  summarize(range = max(SIZE) - min(SIZE)) %>%
+  pull(range)
+range_2016 <- urchins_data %>%
+  filter(YEAR == 2016) %>%
+  summarize(range = max(SIZE) - min(SIZE)) %>%
+  pull(range)
+
+bin_number_2015 <- round(2*n_2015^(1/3))
+bin_number_2016 <- round(2*n_2016^(1/3))
+
+bin_width_2015 <- range_2015/(2*n_2015^(1/3))
+bin_width_2016 <- range_2016/(2*n_2016^(1/3))
+
 ggplot(urchins_data, aes(x = SIZE, fill = TREATMENT)) +
-  geom_histogram(bins = 17) +   
+  geom_histogram(data = filter(urchins_data, YEAR == 2015), 
+                 bins = bin_number_2015, binwidth = bin_width_2015) +
+  geom_histogram(data = filter(urchins_data, YEAR == 2016), 
+                 bins = bin_number_2016, binwidth = bin_width_2016) +
   facet_wrap(~ YEAR) +
   labs(title = "Size Distribution of Red Urchins (2015-2016)",
-       x = "Urchin Size (mm)",
+       x = "Urchin Size (cm)",
        y = "Count",
        fill = "Treatment",
        caption = "Figure 1: Histogram of red urchin size distributions at Mohawk Reef in 2015 and 2016,
-       categorized by treatment type. The x-axis represents urchin size (mm), and the y-axis indicates 
-       the count of individuals in each size bin.") +
+       categorized by treatment type. The x-axis represents urchin size (cm), and the y-axis indicates 
+       the count of individuals in each size bin.2015 data has 14 bins with bin width 0.49, 
+       2016 data has 12 bins with bin width 0.60 based on the Rice Rule.") +
   theme(plot.caption = element_text(hjust = 0.5)) 
 ```
 
@@ -60,38 +73,55 @@ ggplot(urchins_data, aes(x = SIZE, fill = TREATMENT)) +
 ```{r}
 #2015
 urchins_2015 <- urchins_data %>%
-  filter(YEAR == 2015 & COMMON_NAME == "Red Urchin") 
+  filter(YEAR == 2015) 
 mean_2015 <- mean(urchins_2015$SIZE)
 urchins_2015_CI <- t.test(urchins_2015$SIZE, mu = mean_2015, conf.level = 0.95, 
                           alternative = "two.sided")
 print(paste("The 95% confidence interval for red urchin sizes in 2015 is [", 
             round(urchins_2015_CI$conf.int[1], 2), ",", 
-            round(urchins_2015_CI$conf.int[2], 2), "]"))
+            round(urchins_2015_CI$conf.int[2], 2), "] cm"))
+```
 
+##b. 95% two-sided confidence interval for red urchin sizes in 2016 across treatment types
+
+```{r}
 #2016
 urchins_2016 <- urchins_data %>%
-  filter(YEAR == 2016 & COMMON_NAME == "Purple Urchin") 
+  filter(YEAR == 2016) 
 mean_2016 <- mean(urchins_2016$SIZE)
 urchins_2016_CI <- t.test(urchins_2016$SIZE, mu = mean_2016, conf.level = 0.95, 
                           alternative = "two.sided")
 print(paste("The 95% confidence interval for purple urchin sizes in 2016 is [", 
             round(urchins_2016_CI$conf.int[1], 2), ",", 
-            round(urchins_2016_CI$conf.int[2], 2), "]"))
+            round(urchins_2016_CI$conf.int[2], 2), "] cm"))
 ```
 
 #(3) One-sample Hypothesis Tests
 
 ##(a) One-sided one-sample t-test to see if red urchins in 2015 from control group are significantly less than the mean red urchin size of 9 cm reported by researchers at another location
 
+Null hypothesis: Red urchins in the 2015 from the control group do not have lower sizes that the population mean red urchin size of 9 cm
+Alternative hypothesis: Red urchins in the 2015 from the control group have lower sizes that the population mean red urchin size of 9 cm
+
 ```{r}
 urchins_2015_control <- urchins_data %>%
-  filter(YEAR == 2015 & COMMON_NAME == "Red Urchin" & TREATMENT == "CONTROL") 
+  filter(YEAR == 2015 & TREATMENT == "CONTROL") 
 urchins_2015_control_test <- t.test(urchins_2015_control$SIZE, mu = 9, 
                                     conf.level = 0.95, alternative = "less")
 print(paste("Resulting p-value = ", urchins_2015_control_test$p.value))
 ```
 
-With a 95% confidence leval, since p-value is less than 0.05, we reject the null hypothesis in favor of the alternative hypothesis which is that red urchins in the 2015 from the control group have significantly lower sizs that the mean red urch size of 9 cm reported by researchers at another location.
+With a 95% confidence level, since p-value is less than 0.05, we reject the null hypothesis in favor of the alternative hypothesis which is that red urchins in the 2015 from the control group have significantly lower sizes that the mean red urchin size of 9 cm reported by researchers at another location.
+
+```{r}
+urchins_2016_control <- urchins_data %>%
+  filter(YEAR == 2016 & TREATMENT == "CONTROL") 
+urchins_2016_control_test <- t.test(urchins_2016_control$SIZE, mu = 9, 
+                                    conf.level = 0.95, alternative = "less")
+print(paste("Resulting p-value = ", urchins_2016_control_test$p.value))
+```
+
+With a 95% confidence level, since p-value is less than 0.05, we reject the null hypothesis in favor of the alternative hypothesis which is that red urchins in the 2016 from the control group have significantly lower sizes that the mean red urchin size of 9 cm reported by researchers at another location.
 
 #(4) Two-sample Hypothesis Tests
 
@@ -100,7 +130,7 @@ With a 95% confidence leval, since p-value is less than 0.05, we reject the null
 ```{r}
 red_2015_control <- urchins_2015_control
 red_2015_annual <- urchins_data %>%
-  filter(YEAR == 2015 & COMMON_NAME == "Red Urchin" & TREATMENT == "ANNUAL REMOVAL") 
+  filter(YEAR == 2015 & TREATMENT == "ANNUAL REMOVAL") 
 
 #testing for equal variances first
 red_2015_vartest <- var.test(x = red_2015_control$SIZE, y = red_2015_annual$SIZE,
@@ -109,7 +139,7 @@ red_2015_vartest <- var.test(x = red_2015_control$SIZE, y = red_2015_annual$SIZE
 
 red_2015_vartest
 
-#The p-value <0.05, so we reject the hypothesis and we retain the alternative
+#The p-value <0.05, so we reject the null hypothesis and we retain the alternative
 #hypothesis that the variances are not equal
 
 red_2015_ttest <- t.test(red_2015_control$SIZE, red_2015_annual$SIZE)
@@ -117,15 +147,15 @@ red_2015_ttest <- t.test(red_2015_control$SIZE, red_2015_annual$SIZE)
 red_2015_ttest
 ```
 
-The mean red urchin size in 2015 was not significantly different between the control group (mean ± standard deviation = 8.18 ± 1.38) and the annual removal group (mean ± standard deviation = 8.22 ± 0.92) as determined by a two-sample, two-sided t-test (t = -0.29, df = 313.51, p = 0.77, α = 0.05)
+The mean red urchin size in 2015 was not significantly different between the control group (mean ± standard deviation = 8.18 ± 1.38, n = 180) and the annual removal group (mean ± standard deviation = 8.22 ± 0.92, n = 175) as determined by a two-sample, two-sided t-test (t = -0.29, df = 313.51, p = 0.77, α = 0.05)
 
 ##(aii) Two-sample two-sided t-test for mean red urchin sizes between the two treatments in 2016
 
 ```{r}
 red_2016_control <- urchins_data %>%
-  filter(YEAR == 2016 & COMMON_NAME == "Red Urchin" & TREATMENT == "CONTROL") 
+  filter(YEAR == 2016 & TREATMENT == "CONTROL") 
 red_2016_annual <- urchins_data %>%
-  filter(YEAR == 2016 & COMMON_NAME == "Red Urchin" & TREATMENT == "ANNUAL REMOVAL") 
+  filter(YEAR == 2016 & TREATMENT == "ANNUAL REMOVAL") 
 
 #testing for equal variances first
 red_2016_vartest <- var.test(x = red_2016_control$SIZE, y = red_2016_annual$SIZE,
@@ -134,7 +164,7 @@ red_2016_vartest <- var.test(x = red_2016_control$SIZE, y = red_2016_annual$SIZE
 
 red_2016_vartest
 
-#The p-value <0.05, so we reject the hypothesis and we retain the alternative
+#The p-value <0.05, so we reject the null hypothesis and we retain the alternative
 #hypothesis that the variances are not equal
 
 red_2016_ttest <- t.test(red_2016_control$SIZE, red_2016_annual$SIZE)
@@ -142,12 +172,11 @@ red_2016_ttest <- t.test(red_2016_control$SIZE, red_2016_annual$SIZE)
 red_2016_ttest
 ```
 
-The mean red urchin size in 2016 was significantly different between the control group (mean ± standard deviation = 8.55 ± 1.06) and the annual removal group (mean ± standard deviation = 8.01 ± 0.85) as determined by a two-sample, two-sided t-test (t = 4.0132, df = 190.00, p = 8.597e-05, α = 0.05)
+The mean red urchin size in 2016 was significantly different between the control group (mean ± standard deviation = 8.55 ± 1.06, n = 101) and the annual removal group (mean ± standard deviation = 8.01 ± 0.85, n = 100) as determined by a two-sample, two-sided t-test (t = 4.0132, df = 190.99, p = 8.597e-05, α = 0.05)
 
 ##(b) Two-sample two-sided t-test for mean red urchin sizes in the control group between 2015 and 2016
 
 ```{r}
-
 #testing for equal variances first
 red_control_vartest <- var.test(x = red_2015_control$SIZE, y = red_2016_control$SIZE,
                              alternative = "two.sided",
@@ -155,7 +184,7 @@ red_control_vartest <- var.test(x = red_2015_control$SIZE, y = red_2016_control$
 
 red_control_vartest
 
-#The p-value <0.05, so we reject the hypothesis and we retain the alternative
+#The p-value <0.05, so we reject the null hypothesis and we retain the alternative
 #hypothesis that the variances are not equal
 
 red_control_ttest <- t.test(red_2015_control$SIZE, red_2016_control$SIZE)
@@ -163,4 +192,4 @@ red_control_ttest <- t.test(red_2015_control$SIZE, red_2016_control$SIZE)
 red_control_ttest
 ```
 
-The mean red urchin size was significantly different between the 2015 data (mean ± standard deviation = 8.18 ± 1.38) and the 2016 data (mean ± standard deviation = 8.55 ± 1.06) as determined by a two-sample, two-sided t-test (t = -2.54, df = 252.7, p = 0.01, α = 0.05)
+The mean red urchin size was significantly different between the 2015 control group data (mean ± standard deviation = 8.18 ± 1.38, n = 180) and the 2016 control group data (mean ± standard deviation = 8.55 ± 1.06, n = 101) as determined by a two-sample, two-sided t-test (t = -2.54, df = 252.7, p = 0.01, α = 0.05)
