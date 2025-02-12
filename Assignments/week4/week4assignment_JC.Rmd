@@ -1,7 +1,8 @@
 ---
-title: "week4assignment_JC"
+title: "Week 4 Assignment"
+author: "Jessalyn Chuang"
 output: pdf_document
-date: "2025-02-11"
+geometry: margin=2.54cm
 ---
 
 ```{r setup, include=FALSE}
@@ -98,7 +99,7 @@ print(paste("The 95% confidence interval for purple urchin sizes in 2016 is [",
 
 #(3) One-sample Hypothesis Tests
 
-##(a) One-sided one-sample t-test to see if red urchins in 2015 from control group are significantly less than the mean red urchin size of 9 cm reported by researchers at another location
+##(ai) One-sided one-sample t-test to see if red urchins in 2015 from control group are significantly less than the mean red urchin size of 9 cm reported by researchers at another location
 
 Null hypothesis: Red urchins in the 2015 from the control group do not have lower sizes that the population mean red urchin size of 9 cm
 Alternative hypothesis: Red urchins in the 2015 from the control group have lower sizes that the population mean red urchin size of 9 cm
@@ -112,6 +113,11 @@ print(paste("Resulting p-value = ", urchins_2015_control_test$p.value))
 ```
 
 With a 95% confidence level, since p-value is less than 0.05, we reject the null hypothesis in favor of the alternative hypothesis which is that red urchins in the 2015 from the control group have significantly lower sizes that the mean red urchin size of 9 cm reported by researchers at another location.
+
+##(3aii) One-sided one-sample t-test to see if red urchins in 2016 from control group are significantly less than the mean red urchin size of 9 cm reported by researchers at another location
+
+Null hypothesis: Red urchins in the 2016 from the control group do not have lower sizes that the population mean red urchin size of 9 cm
+Alternative hypothesis: Red urchins in the 2016 from the control group have lower sizes that the population mean red urchin size of 9 cm
 
 ```{r}
 urchins_2016_control <- urchins_data %>%
@@ -147,7 +153,7 @@ red_2015_ttest <- t.test(red_2015_control$SIZE, red_2015_annual$SIZE)
 red_2015_ttest
 ```
 
-The mean red urchin size in 2015 was not significantly different between the control group (mean ± standard deviation = 8.18 ± 1.38, n = 180) and the annual removal group (mean ± standard deviation = 8.22 ± 0.92, n = 175) as determined by a two-sample, two-sided t-test (t = -0.29, df = 313.51, p = 0.77, α = 0.05)
+The mean red urchin size in 2015 was not significantly different between the control group (mean ± standard deviation = 8.18 ± 1.38, n = 180) and the annual removal group (mean ± standard deviation = 8.22 ± 0.92, n = 175) as determined by a two-sample, two-sided t-test (t = -0.29, df = 313.51, p = 0.77, $\alpha$ = 0.05)
 
 ##(aii) Two-sample two-sided t-test for mean red urchin sizes between the two treatments in 2016
 
@@ -172,7 +178,7 @@ red_2016_ttest <- t.test(red_2016_control$SIZE, red_2016_annual$SIZE)
 red_2016_ttest
 ```
 
-The mean red urchin size in 2016 was significantly different between the control group (mean ± standard deviation = 8.55 ± 1.06, n = 101) and the annual removal group (mean ± standard deviation = 8.01 ± 0.85, n = 100) as determined by a two-sample, two-sided t-test (t = 4.0132, df = 190.99, p = 8.597e-05, α = 0.05)
+The mean red urchin size in 2016 was significantly different between the control group (mean ± standard deviation = 8.55 ± 1.06, n = 101) and the annual removal group (mean ± standard deviation = 8.01 ± 0.85, n = 100) as determined by a two-sample, two-sided t-test (t = 4.0132, df = 190.99, p = 8.597e-05, $\alpha$ = 0.05)
 
 ##(b) Two-sample two-sided t-test for mean red urchin sizes in the control group between 2015 and 2016
 
@@ -192,4 +198,4 @@ red_control_ttest <- t.test(red_2015_control$SIZE, red_2016_control$SIZE)
 red_control_ttest
 ```
 
-The mean red urchin size was significantly different between the 2015 control group data (mean ± standard deviation = 8.18 ± 1.38, n = 180) and the 2016 control group data (mean ± standard deviation = 8.55 ± 1.06, n = 101) as determined by a two-sample, two-sided t-test (t = -2.54, df = 252.7, p = 0.01, α = 0.05)
+The mean red urchin size was significantly different between the 2015 control group data (mean ± standard deviation = 8.18 ± 1.38, n = 180) and the 2016 control group data (mean ± standard deviation = 8.55 ± 1.06, n = 101) as determined by a two-sample, two-sided t-test (t = -2.54, df = 252.7, p = 0.01, $\alpha$ = 0.05)
