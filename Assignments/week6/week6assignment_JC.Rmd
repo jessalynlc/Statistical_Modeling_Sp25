@@ -29,6 +29,33 @@ salamander_data <- filter(vertebrates_data,
                               species == "Coastal giant salamander",
                               unittype %in% c('C', 'P', 'SC'))
 
+#Rice's rule to find number of columns
+n_C <- sum(salamander_data$unittype == 'C')
+n_P <- sum(salamander_data$unittype == 'P')
+n_SC <- sum(salamander_data$unittype == 'SC')
+range_C <- salamander_data %>%
+  filter(unittype == 'C') %>%
+  summarize(range = max(length_2_mm) - min(length_2_mm)) %>%
+  pull(range)
+range_P <- salamander_data %>%
+  filter(unittype == 'P') %>%
+  summarize(range = max(length_2_mm) - min(length_2_mm)) %>%
+  pull(range)
+range_SC <- salamander_data %>%
+  filter(unittype == 'SC') %>%
+  summarize(range = max(length_2_mm) - min(length_2_mm)) %>%
+  pull(range)
+
+bin_number_C <- round(2*n_C^(1/3))
+bin_number_P <- round(2*n_P^(1/3))
+bin_number_SC <- round(2*n_SC^(1/3))
+
+bin_width_C <- range_C/(2*n_C^(1/3))
+bin_width_P <- range_P/(2*n_P^(1/3))
+bin_width_SC <- range_SC/(2*n_SC^(1/3))
+
+#check if we should do rice's rule or just let it choose like what was done in lab?
+
 salamander_fig1 <- ggplot(salamander_data, aes(x = length_2_mm, fill = unittype)) +
   geom_histogram() +
   scale_fill_manual(values = c("darkorange", "pink", "purple")) +
@@ -132,7 +159,24 @@ salamander_var
 ```
 
 Since p-value is less than 0.05, I reject the null hypothesis stating that the variance between all groups included in
-the data are the same in favor of the alternate hypothesis that states that the variance between all groups included in the data are not the same. Thus, this data does not pass the Bartlett's test.
+the data are the same in favor of the alternate hypothesis that states that the variance between all groups included in the data are not the same. Thus, this data does not pass the Bartlett's test. However, if the largest sample variance is less than 4 times the smallest sample variance, we may still assume variances are equal across samples and conduct an ANOVA. Checking this:
+
+```{r}
+C_var <- var(C_dat_trans$length_2_mm, na.rm = TRUE)
+P_var <- var(P_dat_trans$length_2_mm, na.rm = TRUE)
+SC_var <- var(SC_dat_trans$length_2_mm, na.rm = TRUE)
+
+C_var
+P_var
+SC_var
+```
+
+Variance results:
+Cascades: 0.02
+Pool: 0.02
+Side Channels: 0.02
+
+When finding their variances, they actually all turned out equal, so we may assume variances are approximately equal across samples and conduct an ANOVA.
 
 c. If you found the data from part b did not display approximately equal variances, you may
 stop here. If you found the data from part b did display approximately equal variances, conduct
@@ -141,6 +185,28 @@ lengths across cascades, pools, and side channels of Mack Creek. If you find evi
 significant diﬀerences, perform a post-hoc Tukey’s HSD test to determine which are significant
 from which habitats. Communicate your findings as a figure (with an appropriate caption)
 and in a sentence, as it might appear in a final report.
+
+```{r}
+salamander_ANOVA <- aov(length_2_mm ~ unittype, data = salamander_data_transformed)
+summary(salamander_ANOVA)
+
+#Perform a post-hoc Tukey's HSD test since p < 0.001
+salamander_Tukey <- TukeyHSD(salamander_ANOVA)
+salamander_Tukey
+```
+
+```{r}
+salamander_summary <- salamander_data %>%
+  group_by(unittype) %>%
+  summarize(mean = mean(length_2_mm, na.rm = TRUE),
+  sd = sd(length_2_mm, na.rm = TRUE)) %>%
+  ungroup()
+
+salamander_summary
+```
+
+Salamander species displayed significant diﬀerences in Snout-to-Tail length as determined by one-way ANOVA (F(2, 11411) = 343.6, p < 0.001). Post-hoc testing by Tukey’s HSD revealed that mean Snout-to-Tail length for salamanders in the Cascades habitat (mean =
+104 mm, s.d. = 34.7 mm), Pool habitat (mean = 101 mm, s.d. = 36.1 mm), and Side Channels habitat (mean = 93.4 mm, s.d. = 30.5 mm) all differed significantly from each other.
 
 #(2) Cutthroat Trout-
 
