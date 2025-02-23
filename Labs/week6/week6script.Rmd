@@ -1,0 +1,221 @@
+Setup
+
+Create a new project for this week’s lab named week6 in the ENV710 folder. Open and save a new R Markdown
+script named week6script.Rmd in this project. Edit the title of the script accordingly, and add a first Setup
+header to your script. Then, create and run a new code chunk to load in the packages you will use today.
+
+```{r}
+# Load necessary packages.
+library(here)
+library(tidyverse)
+library(moments)
+library(palmerpenguins)
+
+# Save the palmerpenguins dataset into your Environment.
+penguin_dat <- penguins
+```
+
+Functions for grouping and summarizing data
+
+When you’d like to quickly summarize the contents of a dataframe and impose a particular grouping on the
+data, the group_by() and summarize() functions allow you to do exactly that.
+
+The group_by() function takes the name of the column that you want to group by, which needs to be
+categorical. When using group_by(), however, don’t forget to ungroup() your data the close of your pipe so
+that grouping is not carried forward into other analyses you might want to conduct.
+
+The summarize() function will perform the summary operations on the groups you’ve specified and created
+a new dataframe containing the summary outputs.
+
+```{r}
+# Calculate mean and standard deviation values of penguin flipper
+# length according to the island they live on.
+flipper_summary <- penguin_dat %>%
+  group_by(island) %>%
+  summarize(mean = mean(flipper_length_mm, na.rm = TRUE),
+  sd = sd(flipper_length_mm, na.rm = TRUE)) %>%
+ungroup()
+```
+
+Practice Problem: Create a new dataframe that calculates the median values and variance in bill length
+according to penguin sex. Don’t forget to ungroup your data at the end of your pipe!
+
+```{r}
+bill_summary <- penguin_dat %>% 
+  group_by(sex) %>% 
+  summarize(median = median(bill_length_mm, na.rm = TRUE),
+            variance = var(bill_length_mm, na.rm = TRUE)) %>% 
+  ungroup()
+```
+
+Conducting Analysis of Variance (ANOVA) tests
+
+Analysis of Variance or ANOVA tests may be used when you want to examine diﬀerences in more than two
+sample means. Remember the following hypotheses apply to an ANOVA:
+
+Null Hypothesis: All sample means are equal.
+Alternative Hypothesis: At least two sample means, among all samples, are not equal.
+
+Before running an ANOVA, you must also ensure that your data meets the following requirements:
+• Samples are independent of one another.
+• Data within samples is normally distributed.
+• Variances among samples are equal.
+
+Create a new header in your script titled One-Way ANOVAs.
+
+#ANOVAs
+
+Examining Data Distribution
+We will first examine the data we are using to ensure that sample distributions are approximately normal.
+
+```{r}
+# Examine penguin body mass by species
+penguin_fig1 <- ggplot(penguin_dat, aes(x = body_mass_g,
+fill = species)) + # base plot
+geom_histogram() + # creates histograms
+scale_fill_manual(values = c("darkorange","purple","cyan4")) + # customize colors
+labs(x = "Body Mass (g)",
+y = "Count") + # edits labels
+facet_grid(.~species) + # facets by species to avoid overlap
+theme_bw() + # removes the grey background
+theme(legend.position = "none") # removes the legend
+# View figure.
+penguin_fig1
+```
+
+All but Gentoo appear reliably normally distributed, so will also calculate skew and kurtosis for this species
+to be more certain of moving forward with the one-way ANOVA test.
+
+```{r}
+# Filter out only Gentoo values.
+gentoo_dat <- penguin_dat %>%
+filter(species== "Gentoo")
+# Calculate skew.
+skewness(gentoo_dat$body_mass_g, na.rm = TRUE)
+# Calculate kurtosis.
+kurtosis(gentoo_dat$body_mass_g, na.rm = TRUE)
+```
+
+
+
+The data appears to be approximately symmetrical (skewness = 0.06) and moderately platykurtic (kurtosis
+= 2.26), so we will proceed with the assumption that these body mass data for the Gentoo species are
+approximately normally distributed.
+
+Note, many data you will deal with in the future will not be normally distributed. In these cases
+you have two options on how to proceed:
+
+(1) Apply a log transformation. This is standard practice to adjust raw values so that they do conform to
+a normal distribution and you may continue with applying a statistical test that requires normally-
+distributed data, like a one-way ANOVA. In R, you may apply either a log based 10 transformation
+(log10()) or a natural log transformation (log()) - either option is frequently used, just be sure to
+state clearly which you have performed.
+
+(2) Stop and re-consider what kind of statistical test you should use. Later this week and early next, we’ll
+cover a few alternative options when you encounter data that is not normally distributed but you would
+still like to compare values between groups.
+
+##Bartlett’s Test for Equal Variance
+The next thing we need to ensure is that variances are approximately equal across species. The Bartlett test
+for homogeneity of variances is based on a null hypothesis that the variance between all groups included in
+the data are the same. Typically, you will use a 95% confidence level (5% significant level) when applying
+this test.
+
+```{r}
+# Perform Bartlett test.
+penguin_var <- bartlett.test(penguin_dat$body_mass_g, penguin_dat$species)
+# Examine results.
+penguin_var
+```
+
+Because p= 0.05, we do not have suﬃcient evidence to reject the null hypothesis, so we may assume that
+variance across the three groups (species) in this dataset are equal and proceed with conducting a one-way
+ANOVA.
+
+There is also the helpful rule of thumb that states that if the largest sample variance is less than 4 times the
+smallest sample variance, you may still assume variances are equal across samples and conduct an ANOVA.
+
+##Analysis of Variance (ANOVA)
+
+```{r}
+# Perform a one-way ANOVA.
+penguin_ANOVA <- aov(body_mass_g~ species, data = penguin_dat)
+# Examine the results.
+summary(penguin_ANOVA)
+```
+
+If p ≥ 0.05, you may conclude that there are no significant diﬀerences between mean values of any of the
+samples included in your dataset. If this is the case, you may stop here and report your results as such.
+If p < 0.05, you may conclude that there is a significant diﬀerence in mean values between at least two of
+your samples and continue forward to conduct a Tukey’s Honestly Significant Diﬀerence (HSD) test.
+
+#Post-hoc Tukey’s HSD Test
+
+```{r}
+# Perform a Tukey's HSD test.
+penguin_Tukey <- TukeyHSD(penguin_ANOVA)
+# Examine the results.
+penguin_Tukey
+```
+
+Notice how the results of the Tukey’s HSD display the p-value for each of the pair-wise comparisons between
+species. Based on these values, we may conclude that there is in fact a significant diﬀerence in body mass
+between the Gentoo and Adelie species as well as the Gentoo and Chinstrap species.
+
+#Communicating Results
+
+When graphically presenting the results of an ANOVA, it is common to include small letters above each of
+the samples to notate which samples were significant from others. We’ll do exactly that in the following plot.
+We’ll first calculate the mean and standard deviation values and then overlay those over top of the raw data
+points to provide better context for data distribution amongst the three species.
+
+```{r}
+# Calculate means and standard deviation.
+penguin_summary <- penguin_dat %>%
+group_by(species) %>%
+summarize(mean = mean(body_mass_g, na.rm = TRUE),
+sd = sd(body_mass_g, na.rm = TRUE)) %>%
+ungroup()
+# We also need to rename the "mean" column - you
+# will see why in a moment.
+penguin_summary <- penguin_summary %>%
+rename(body_mass_g = mean)
+
+# Create a plot to display results.
+# Because we are using multiple datasets in the same figure,
+# we will specify the aesthetics in each individual data call
+penguin_fig2 <- ggplot() +
+  # add raw data points
+  geom_jitter(data = penguin_dat, aes(x = species, y = body_mass_g, color = species), alpha = 0.5, size = 0.5) +
+  # add summary statistics
+  geom_point(data = penguin_summary, aes(x = species, y = body_mass_g, color = species), size = 3) +
+  # add error bars 
+  geom_errorbar(data = penguin_summary,aes(x = species, ymin = body_mass_g-sd, ymax = body_mass_g+sd, color = species), width = 0.10, size = 1) +
+  # add text annotations
+  annotate("text", x = "Adelie", y = 5500, label = "a", size = 8) +
+  annotate("text", x = "Chinstrap", y = 5500, label = "a", size = 8) + annotate("text", x = "Gentoo", y = 6100,
+label = "b", size = 8) +
+  # edit colors
+  scale_color_manual(values = c("darkorange","purple","cyan4")) +
+  # label axes
+  labs(x = "Species", y = "Body Mass (g)") +
+  # remove grey background
+  theme_bw() +
+  # remove legend
+  theme(legend.position = "none")
+# View figure.
+penguin_fig2
+```
+
+When reporting the results of an ANOVA it’s best practice to include many of the measures of central
+tendency and data spread as we’ve seen in previous weeks. Furthermore, you’ll want to include the degrees of
+freedom, the F-statistic, and p-value of the ANOVA as well as the p-values for any of the post-hoc tests that
+yielded significant diﬀerences. An example of how we might report our findings from this particular test can
+be found below:
+
+Penguin species displayed significant diﬀerences in body mass as determined by one-way ANOVA (F(2, 339)
+= 343.6, p < 0.001). Post-hoc testing by Tukey’s HSD revealed that mean body mass for Adelie (mean =
+3,700 g, s.d. = 459 g) and Chinstrap (mean = 3,733 g, s.d. = 384 g) did not diﬀer significantly, while Gentoo
+penguins (mean = 5,076 g, s.d. = 504 g) diﬀered significantly from both species.
+
+F(2,339): df of species, residuals

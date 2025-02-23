@@ -1,0 +1,257 @@
+---
+title: "Week 6 Assignment"
+author: "Jessalyn Chuang"
+output: pdf_document
+geometry: margin=2.54cm
+---
+
+```{r}
+# Load necessary packages.
+library(here)
+library(tidyverse)
+library(moments)
+library(dplyr)
+```
+
+#(1) Coastal Giant Salamander-
+a. Filter the dataset only for coastal giant salamanders in cascades (C), pools (P), and side
+channels (SC). Create a figure that helps you to evaluate whether their snout-to-tail length 
+(length_2_mm) by habitat type (unittype) is normally distributed. You may also calculate skew
+and kurtosis values to help with your decision-making. Are these data normally distributed?
+Why or why not? If they are not, apply a log-transform (log10()) to the length data and
+re-evaluate if the data now meets the criteria to be considered normally-distributed.
+
+```{r}
+vertebrates_data <- read.csv(file = here("./Assignments/week6/and_vertebrates.csv"),
+                           stringsAsFactors = TRUE)
+
+salamander_data <- filter(vertebrates_data, 
+                              species == "Coastal giant salamander",
+                              unittype %in% c('C', 'P', 'SC'))
+
+salamander_fig1 <- ggplot(salamander_data, aes(x = length_2_mm, fill = unittype)) +
+  geom_histogram() +
+  scale_fill_manual(values = c("darkorange", "pink", "purple")) +
+  labs(x = "Snout-to-Tail Length(mm)", y = "Count") +
+  facet_grid(.~unittype) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+salamander_fig1
+```
+
+```{r}
+# Separate data by unittype
+C_dat <- salamander_data %>%
+filter(unittype == "C")
+
+P_dat <- salamander_data %>%
+filter(unittype == "P")
+
+SC_dat <- salamander_data %>%
+filter(unittype == "SC")
+
+# Calculate skew.
+skewness(C_dat$length_2_mm, na.rm = TRUE)
+skewness(P_dat$length_2_mm, na.rm = TRUE)
+skewness(SC_dat$length_2_mm, na.rm = TRUE)
+
+# Calculate kurtosis.
+kurtosis(C_dat$length_2_mm, na.rm = TRUE)
+kurtosis(P_dat$length_2_mm, na.rm = TRUE)
+kurtosis(SC_dat$length_2_mm, na.rm = TRUE)
+```
+
+Skew results:
+Cascades: 0.94
+Pool: 1.11
+Side Channels: 0.99
+
+Kurtosis results:
+Cascades: 4.69
+Pool: 4.89
+Side Channels: 4.94
+
+Visually, the three data from the three habitats all seem to be positive skewed, with the majority of points concentrated at lower values. From the skew results, all three have values that suggest positive skewing as they are all greater than 0. Lastly for kurtosis, all three have values greater than 3, suggesting that the data is leptokurtic. Therefore, this data is not normally distributed!
+
+```{r}
+#log-transformation of data
+salamander_data_transformed <- mutate(salamander_data, length_2_mm = log10(length_2_mm))
+```
+
+```{r}
+salamander_fig2 <- ggplot(salamander_data_transformed, aes(x = length_2_mm, fill = unittype)) +
+  geom_histogram() +
+  scale_fill_manual(values = c("darkorange", "pink", "purple")) +
+  labs(x = "Snout-to-Tail Length(mm)", y = "Count") +
+  facet_grid(.~unittype) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+salamander_fig2
+```
+
+```{r}
+# Separate data by unittype
+C_dat_trans <- salamander_data_transformed %>%
+filter(unittype == "C")
+
+P_dat_trans <- salamander_data_transformed %>%
+filter(unittype == "P")
+
+SC_dat_trans <- salamander_data_transformed %>%
+filter(unittype == "SC")
+
+# Calculate skew.
+skewness(C_dat_trans$length_2_mm, na.rm = TRUE)
+skewness(P_dat_trans$length_2_mm, na.rm = TRUE)
+skewness(SC_dat_trans$length_2_mm, na.rm = TRUE)
+
+# Calculate kurtosis.
+kurtosis(C_dat_trans$length_2_mm, na.rm = TRUE)
+kurtosis(P_dat_trans$length_2_mm, na.rm = TRUE)
+kurtosis(SC_dat_trans$length_2_mm, na.rm = TRUE)
+```
+
+Now, all three habitat types appear to be normally distributed from the visual inspection and from their skewness values all being around 0 and kurtosis values being around 3.
+
+b. If you found the data from part a were not normally distributed and a log-transform did not
+change this finding, you may stop here and proceed to question 2. If you found the data from
+part a were normally distributed, conduct a Bartlett’s test for equal variance to determine if
+these data also satisfy the need for homogeneity of variances across groups. Do these data
+have approximately equal variances? Why or why not? Remember, the data may not pass
+the Bartlett’s test, but if they adhere to the rule of thumb mentioned above, you may proceed
+with a one-way ANOVA.
+
+```{r}
+# Perform Bartlett test.
+salamander_var <- bartlett.test(salamander_data_transformed$length_2_mm, 
+                                salamander_data_transformed$unittype)
+# Examine results.
+salamander_var
+```
+
+Since p-value is less than 0.05, I reject the null hypothesis stating that the variance between all groups included in
+the data are the same in favor of the alternate hypothesis that states that the variance between all groups included in the data are not the same. Thus, this data does not pass the Bartlett's test.
+
+c. If you found the data from part b did not display approximately equal variances, you may
+stop here. If you found the data from part b did display approximately equal variances, conduct
+a one-way ANOVA to see if there is a significant diﬀerence between coastal giant salamander
+lengths across cascades, pools, and side channels of Mack Creek. If you find evidence of
+significant diﬀerences, perform a post-hoc Tukey’s HSD test to determine which are significant
+from which habitats. Communicate your findings as a figure (with an appropriate caption)
+and in a sentence, as it might appear in a final report.
+
+#(2) Cutthroat Trout-
+
+a. Filter the dataset only for cutthroat trout and create a figure that helps you to evaluate
+whether their snout-to-fork length (length_1_mm) by reach (reach) is normally distributed. You
+may also calculate skew and kurtosis values to help with your decision-making. Are these data
+normally distributed? Why or why not? If they are not, apply a log-transform (log10()) to
+the length data and re-evaluate if the data now meets the criteria to be considered normally-
+distributed.
+
+```{r}
+trout_data <- filter(vertebrates_data, 
+                              species == "Cutthroat trout")
+
+trout_fig1 <- ggplot(trout_data, aes(x = length_1_mm, fill = reach)) +
+  geom_histogram() +
+  scale_fill_manual(values = c("darkorange", "pink", "purple")) +
+  labs(x = "Snout-to-Fork Length (mm)", y = "Count") +
+  facet_grid(.~reach) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+trout_fig1
+```
+
+```{r}
+# Separate data by unittype
+L_dat <- trout_data %>%
+filter(reach == "L")
+
+M_dat <- trout_data %>%
+filter(reach == "M")
+
+U_dat <- trout_data %>%
+filter(reach == "U")
+
+# Calculate skew.
+skewness(L_dat$length_1_mm, na.rm = TRUE)
+skewness(M_dat$length_1_mm, na.rm = TRUE)
+skewness(U_dat$length_1_mm, na.rm = TRUE)
+
+# Calculate kurtosis.
+kurtosis(L_dat$length_1_mm, na.rm = TRUE)
+kurtosis(M_dat$length_1_mm, na.rm = TRUE)
+kurtosis(U_dat$length_1_mm, na.rm = TRUE)
+```
+
+Skew results:
+L: 0.40
+M: 0.26
+U: 0.38
+
+Kurtosis results:
+L: 2.28
+M: 2.16
+U: 2.10
+
+Visually, the three data sets appear bi-modal. From the skew results, all three have values slightly above 0 indicating slight positive skewing. All three have kurtosis values less than 3, indicating that they may be platykurtic. Overall, they do not seem normally distributed.
+
+```{r}
+#log-transformation of data
+trout_data_transformed <- mutate(trout_data, length_1_mm = log10(length_1_mm))
+```
+
+```{r}
+trout_fig2 <- ggplot(trout_data_transformed, aes(x = length_1_mm, fill = reach)) +
+  geom_histogram() +
+  scale_fill_manual(values = c("darkorange", "pink", "purple")) +
+  labs(x = "Snout-to-Fork Length (mm)", y = "Count") +
+  facet_grid(.~reach) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+trout_fig2
+```
+
+```{r}
+# Separate data by unittype
+L_dat_trans <- trout_data_transformed %>%
+filter(reach == "L")
+
+M_dat_trans <- trout_data_transformed %>%
+filter(reach == "M")
+
+U_dat_trans <- trout_data_transformed %>%
+filter(reach == "U")
+
+# Calculate skew.
+skewness(L_dat_trans$length_1_mm, na.rm = TRUE)
+skewness(M_dat_trans$length_1_mm, na.rm = TRUE)
+skewness(U_dat_trans$length_1_mm, na.rm = TRUE)
+
+# Calculate kurtosis.
+kurtosis(L_dat_trans$length_1_mm, na.rm = TRUE)
+kurtosis(M_dat_trans$length_1_mm, na.rm = TRUE)
+kurtosis(U_dat_trans$length_1_mm, na.rm = TRUE)
+```
+
+After applying the log 10 transformation, the data is still bi-modal as apparent from a visual inspection. While skewness was brought closer to 0, kurtosis values are still less than 3, and so these distributions are considered platykurtic. The data are still not normally distributed.
+
+b. If you found the data from part a were not normally distributed and a log-transform did
+not change this finding, you may stop here. If you found the data from part a were normally
+distributed, conduct a Bartlett’s test for equal variance to determine if these data also satisfy
+the need for homogeneity of variances across groups. Do these data have approximately similar
+variances? Why or why not? Remember, the data may not pass the Bartlett’s test, but if
+they adhere to the rule of thumb mentioned above, you may proceed with a one-way ANOVA.
+
+c. If you found the data from part b did not display equal variances, you may stop here. If
+you found the data from part b did display equal variances, conduct a one-way ANOVA to see
+if there is a significant diﬀerence between cutthroat trout lengths across lower, middle, and
+upper reaches of Mack Creek. If you find evidence of significant diﬀerences, perform a post-
+hoc Tukey’s HSD test to determine which are significant from which reaches. Communicate
+your findings as a figure (with an appropriate caption) and a sentence, as it might appear in
+a final report.
