@@ -29,33 +29,6 @@ salamander_data <- filter(vertebrates_data,
                               species == "Coastal giant salamander",
                               unittype %in% c('C', 'P', 'SC'))
 
-#Rice's rule to find number of columns
-n_C <- sum(salamander_data$unittype == 'C')
-n_P <- sum(salamander_data$unittype == 'P')
-n_SC <- sum(salamander_data$unittype == 'SC')
-range_C <- salamander_data %>%
-  filter(unittype == 'C') %>%
-  summarize(range = max(length_2_mm) - min(length_2_mm)) %>%
-  pull(range)
-range_P <- salamander_data %>%
-  filter(unittype == 'P') %>%
-  summarize(range = max(length_2_mm) - min(length_2_mm)) %>%
-  pull(range)
-range_SC <- salamander_data %>%
-  filter(unittype == 'SC') %>%
-  summarize(range = max(length_2_mm) - min(length_2_mm)) %>%
-  pull(range)
-
-bin_number_C <- round(2*n_C^(1/3))
-bin_number_P <- round(2*n_P^(1/3))
-bin_number_SC <- round(2*n_SC^(1/3))
-
-bin_width_C <- range_C/(2*n_C^(1/3))
-bin_width_P <- range_P/(2*n_P^(1/3))
-bin_width_SC <- range_SC/(2*n_SC^(1/3))
-
-#check if we should do rice's rule or just let it choose like what was done in lab?
-
 salamander_fig1 <- ggplot(salamander_data, aes(x = length_2_mm, fill = unittype)) +
   geom_histogram() +
   scale_fill_manual(values = c("darkorange", "pink", "purple")) +
@@ -110,7 +83,7 @@ salamander_data_transformed <- mutate(salamander_data, length_2_mm = log10(lengt
 salamander_fig2 <- ggplot(salamander_data_transformed, aes(x = length_2_mm, fill = unittype)) +
   geom_histogram() +
   scale_fill_manual(values = c("darkorange", "pink", "purple")) +
-  labs(x = "Snout-to-Tail Length(mm)", y = "Count") +
+  labs(x = "Snout-to-Tail Length(mm), Log Scale", y = "Count") +
   facet_grid(.~unittype) +
   theme_bw() +
   theme(legend.position = "none")
@@ -140,7 +113,7 @@ kurtosis(P_dat_trans$length_2_mm, na.rm = TRUE)
 kurtosis(SC_dat_trans$length_2_mm, na.rm = TRUE)
 ```
 
-Now, all three habitat types appear to be normally distributed from the visual inspection and from their skewness values all being around 0 and kurtosis values being around 3.
+Now, all three habitat types appear to be normally distributed from the visual inspection. Their skewness values are now all around 0 and kurtosis values are all around 3 (mesokurtic). 
 
 b. If you found the data from part a were not normally distributed and a log-transform did not
 change this finding, you may stop here and proceed to question 2. If you found the data from
@@ -205,7 +178,7 @@ salamander_summary <- salamander_data %>%
 salamander_summary
 ```
 
-Salamander species displayed significant diﬀerences in Snout-to-Tail length as determined by one-way ANOVA (F(2, 11411) = 343.6, p < 0.001). Post-hoc testing by Tukey’s HSD revealed that mean Snout-to-Tail length for salamanders in the Cascades habitat (mean =
+Salamander species displayed significant diﬀerences in Snout-to-Tail length as determined by one-way ANOVA (F(2, 11411) = 76.35, p < 0.001). Post-hoc testing by Tukey’s HSD revealed that mean Snout-to-Tail length for salamanders in the Cascades habitat (mean =
 104 mm, s.d. = 34.7 mm), Pool habitat (mean = 101 mm, s.d. = 36.1 mm), and Side Channels habitat (mean = 93.4 mm, s.d. = 30.5 mm) all differed significantly from each other.
 
 #(2) Cutthroat Trout-
@@ -275,7 +248,7 @@ trout_data_transformed <- mutate(trout_data, length_1_mm = log10(length_1_mm))
 trout_fig2 <- ggplot(trout_data_transformed, aes(x = length_1_mm, fill = reach)) +
   geom_histogram() +
   scale_fill_manual(values = c("darkorange", "pink", "purple")) +
-  labs(x = "Snout-to-Fork Length (mm)", y = "Count") +
+  labs(x = "Snout-to-Fork Length (mm), Log Scale", y = "Count") +
   facet_grid(.~reach) +
   theme_bw() +
   theme(legend.position = "none")
@@ -314,6 +287,8 @@ the need for homogeneity of variances across groups. Do these data have approxim
 variances? Why or why not? Remember, the data may not pass the Bartlett’s test, but if
 they adhere to the rule of thumb mentioned above, you may proceed with a one-way ANOVA.
 
+Since the data was not normally distributed, I did not conduct a Bartlett's test for equal variance. 
+
 c. If you found the data from part b did not display equal variances, you may stop here. If
 you found the data from part b did display equal variances, conduct a one-way ANOVA to see
 if there is a significant diﬀerence between cutthroat trout lengths across lower, middle, and
@@ -321,3 +296,5 @@ upper reaches of Mack Creek. If you find evidence of significant diﬀerences, p
 hoc Tukey’s HSD test to determine which are significant from which reaches. Communicate
 your findings as a figure (with an appropriate caption) and a sentence, as it might appear in
 a final report.
+
+Since the data was not normally distributed, I did not conduct a one-way ANOVA.
