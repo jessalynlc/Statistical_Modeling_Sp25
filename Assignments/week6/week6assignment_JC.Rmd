@@ -32,10 +32,13 @@ salamander_data <- filter(vertebrates_data,
 salamander_fig1 <- ggplot(salamander_data, aes(x = length_2_mm, fill = unittype)) +
   geom_histogram() +
   scale_fill_manual(values = c("darkorange", "pink", "purple")) +
-  labs(x = "Snout-to-Tail Length(mm)", y = "Count") +
-  facet_grid(.~unittype) +
+  labs(x = "Snout-to-Tail Length (mm)", y = "Count") +
+  facet_grid(. ~ unittype, labeller = labeller(unittype = c("C" = "Cascades", 
+                                                            "P" = "Pools", 
+                                                            "SC" = "Side Channels"))) +
   theme_bw() +
   theme(legend.position = "none")
+
 
 salamander_fig1
 ```
@@ -84,7 +87,9 @@ salamander_fig2 <- ggplot(salamander_data_transformed, aes(x = length_2_mm, fill
   geom_histogram() +
   scale_fill_manual(values = c("darkorange", "pink", "purple")) +
   labs(x = "Snout-to-Tail Length(mm), Log Scale", y = "Count") +
-  facet_grid(.~unittype) +
+  facet_grid(.~unittype, labeller = labeller(unittype = c("C" = "Cascades", 
+                                                            "P" = "Pools", 
+                                                            "SC" = "Side Channels"))) +
   theme_bw() +
   theme(legend.position = "none")
 
@@ -176,6 +181,55 @@ salamander_summary <- salamander_data %>%
   ungroup()
 
 salamander_summary
+
+salamander_summary <- salamander_summary %>%
+rename(length_2_mm = mean)
+
+salamander_data$unittype <- factor(salamander_data$unittype, 
+                                   levels = c("C", "P", "SC"),
+                                   labels = c("Cascades", "Pools", "Side Channels"))
+
+salamander_summary$unittype <- factor(salamander_summary$unittype, 
+                                      levels = c("C", "P", "SC"),
+                                      labels = c("Cascades", "Pools", "Side Channels"))
+
+salamander_fig3 <- ggplot() +
+  # Add raw data points
+  geom_jitter(data = salamander_data, aes(x = unittype, y = length_2_mm, 
+                                          color = unittype), alpha = 0.5, size = 0.5) +
+  # Add summary statistics
+  geom_point(data = salamander_summary, aes(x = unittype, y = length_2_mm, 
+                                            color = unittype), size = 3) +
+  # Add error bars 
+  geom_errorbar(data = salamander_summary, aes(x = unittype, 
+                                               ymin = length_2_mm - sd, 
+                                               ymax = length_2_mm + sd, 
+                                               color = unittype), width = 0.10, 
+                size = 1) +
+  # Add text annotations
+  annotate("text", x = "Cascades", y = 90, label = "C", size = 8) +
+  annotate("text", x = "Pools", y = 90, label = "P", size = 8) + 
+  annotate("text", x = "Side Channels", y = 80, label = "SC", size = 8) +
+  # Edit colors
+  scale_color_manual(values = c("darkorange", "pink", "purple")) +
+  # Label axes and add caption
+  labs(
+    x = "Habitat Type", 
+    y = "Snout-to-Tail Length (mm)",
+    title = "Snout-to-Tail Length of Salamanders by Habitat Type",
+    caption ="This plot shows the distribution of snout-to-tail lengths for salamanders across different habitat types (Cascades, Pools, 
+    Side Channels). Each point represents an individual salamander, and summary statistics with standard deviation error 
+    bars are overlaid."
+  ) +
+  # Adjust caption text size
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    plot.caption = element_text(size = 8, hjust = 0)
+    )
+
+# View figure.
+salamander_fig3
 ```
 
 Salamander species displayed significant diﬀerences in Snout-to-Tail length as determined by one-way ANOVA (F(2, 11411) = 76.35, p < 0.001). Post-hoc testing by Tukey’s HSD revealed that mean Snout-to-Tail length for salamanders in the Cascades habitat (mean =
