@@ -1,0 +1,105 @@
+```{r}
+library(here)
+library(tidyverse)
+#install.packages('dunn.test')
+library(dunn.test)
+library(gt)
+#install.packages('paletteer')
+library(paletteer)
+#install.packages("tibble")
+library(tibble)
+```
+
+#Non-parametric tests
+
+```{r}
+#load in base R dataset "warpbreaks"
+
+wb <- warpbreaks
+
+#Examine dataset
+View(wb)
+
+#save data by wool type.
+wbA <- wb %>% 
+  filter(wool == 'A')
+
+wbB <- wb %>% 
+  filter(wool == 'B')
+
+mann_test <- wilcox.test(wbA$breaks, wbB$breaks, paired = FALSE)
+```
+
+```{r}
+wilcox_test <- wilcox.test(wbA$breaks, wbB$breaks, paired = TRUE)
+```
+
+```{r}
+kruskal_test <- kruskal.test(breaks~tension, data = wb)
+
+dunn_test <- dunn.test(wb$breaks, wb$tension)
+```
+
+Practice Problem: Write the results of these Kruskal Wallis tests as a sentence, including a measure of central tendency and data spread for wool tension groups.
+
+```{r}
+birds <- c(12,14,11,15)
+
+#Conduct a chi-squared test to test for equal likelihoods of all outcomes
+chi_test <- chisq.test(birds)
+
+#Examine observed counts
+chi_test$observed
+
+#Examine expected counts
+chi_test$expected
+
+#Examine standardized residuals
+chi_test$stdres
+#weight heavily given to last two observations
+
+chi_test
+```
+
+```{r}
+wren <- c(12,17,9)
+cardinal <- c(14,20,21)
+titmouse <- c(11,15,7)
+mockingbird <- c(15,4,2)
+
+birdTable <- cbind(wren,cardinal,titmouse,mockingbird)
+
+rownames(birdTable)
+```
+
+```{r}
+#do different species have different food preferences?
+
+rownames(birdTable) <-  c('Suet','Seed','Mealworm')
+chi_test_table <- chisq.test(birdTable)
+chi_test_table$stdres
+#if positive value, that means that under these categories the mockingbird has more preference on suet compared to other seed
+#mockingbird eating suet and cardinal eating mealworm are what?
+```
+
+```{r}
+birdDF <- as.data.frame(birdTable)
+
+birdDF <- rownames_to_column(birdDF, var = "Feeder")
+
+bird_gt <- birdDF %>% 
+  gt(rowname_col = "Feeder") %>% 
+  tab_header(title = "Bird Species Counts by Feeder Type") %>% 
+  cols_label(wren = "Carolina Wren",
+             cardinal = "Cardinal",
+             titmouse = "Tufted Titmouse",
+             mockingbird = "Mockingbird") %>% 
+  grand_summary_rows(column = c(wren, cardinal, titmouse, mockingbird),
+                     fns = list(label = "Total") - sum(.,na.rm = TRUE), use_seps = TRUE) %>% 
+  data_color(columns = c(wren, cardinal, titmouse, mockingbird),
+             palette = c("#COD8FO", "#5A7ECB"),
+             alpha = 0.75)
+  
+#Create a table of recorded bird species visitng different feeders
+```
+
