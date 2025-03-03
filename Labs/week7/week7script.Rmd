@@ -1,3 +1,21 @@
+In this lab, we will learn non-parametric approaches and additional data visualization techniques. The
+learning goals of this lab are to:
+
+• Run Mann-Whitney U and Wilcoxon Signed Rank tests using the wilcox.test() function
+• Run a Kruskal Wallis test using the kruskal.test() function
+• Run post-hoc Dunn’s tests using the dunn.test() function
+• Run a chi-squared test using the chisq.test() function
+• Communicate the results of these results in text
+• Explore the gt() function for data visualization in table format
+
+In the first part of today’s lab, your instructor will walk through the code and relevant functions with you.
+In the second part of today’s lab, you will be asked to complete your assignment in a new RMarkdown file.
+Please be sure to answer assignment questions using full sentences, including information as you would in a
+final report. Submit your RMarkdown file rendered as a pdf to the class Canvas site under the Assignments
+folder. Lab assignments are due at 11:59pm the day before your next lab session meets.
+
+Setup
+
 ```{r}
 library(here)
 library(tidyverse)
@@ -12,94 +30,146 @@ library(tibble)
 
 #Non-parametric tests
 
+Mann-Whitney U tests can be used in place of a two-sample t-test for unpaired data to determine if there is a significant diﬀerence in ranks between two groups. Here, we are using a dataset that reports the number of times wool breaks on a loom depending on wool type (A/B) and tension setting on the loom (L/M/H).
+
 ```{r}
 #load in base R dataset "warpbreaks"
-
 wb <- warpbreaks
-
-#Examine dataset
+# Examine dataset.
 View(wb)
-
-#save data by wool type.
-wbA <- wb %>% 
-  filter(wool == 'A')
-
-wbB <- wb %>% 
-  filter(wool == 'B')
-
-mann_test <- wilcox.test(wbA$breaks, wbB$breaks, paired = FALSE)
+# Save data by wool type.
+wbA <- wb %>%
+filter(wool== "A")
+wbB <- wb %>%
+filter(wool== "B")
+# Is there a significant difference in wool type regarding
+# number of times it breaks on the loom?
+mann_test <- wilcox.test(wbA$breaks, wbB$breaks,
+paired = FALSE)
 ```
 
+Practice Problem: Write the results of this Mann-Whitney U test as a sentence, including a measure of central tendency and data spread for both wool types.
+
+Wilcoxon signed-rank tests can be used in place of a two-sample t-test for paired data to determine if there is a significant diﬀerence in ranks between two groups.
+
+Let’s pretend for a moment that our woolbreaks data is actually paired, and that wool type A is observations collected from skeins (lengths of wool) prior to increasing a room’s humidity and wool type B is observations collected from the same skeins after increasing a room’s humidity. Here, we assume each row from the datasets we’ve created refer to observations collected from the same skein of wool.
+
 ```{r}
-wilcox_test <- wilcox.test(wbA$breaks, wbB$breaks, paired = TRUE)
+# Is there a significant difference in wool breaks
+# (i.e,. number of times it breaks on the loom) in
+# dry versus humid room conditions?
+wilcox_test <- wilcox.test(wbA$breaks, wbB$breaks,
+paired = TRUE)
 ```
 
-```{r}
-kruskal_test <- kruskal.test(breaks~tension, data = wb)
+Practice Problem: Write the results of this Wilcoxon signed-rank test as a sentence, including a measure of central tendency and data spread for both wool types.
 
+#Kruskal Wallis and Dunn's tests
+
+```{r}
+# Is there a significant difference in wool tension regarding
+# number of times it breaks on the loom?
+kruskal_test <- kruskal.test(breaks~ tension, data = wb)
+# It appears there is, so which tension levels are significantly
+# different from one another?
 dunn_test <- dunn.test(wb$breaks, wb$tension)
 ```
 
-Practice Problem: Write the results of these Kruskal Wallis tests as a sentence, including a measure of central tendency and data spread for wool tension groups.
+Practice Problem: Write the results of these Kruskal Wallis and Dunn’s tests as a sentence, including a measure of central tendency and data spread for wool tension groups.
+
+#Chi-squared test
+
+Chi-squared tests are a method for analyzing outcomes of discrete variables (i.e., count data). For example, a one-way chi-squared test determines whether the likelihoods of all possible discrete outcomes for a single categorical variable are the same.
+
+Null Hypothesis: The likelihoods of all possible outcomes are the same. 
+
+Alternative Hypothesis: The likelihoods of all possible outcomes are not the same.
+
+In the following example, we will hypothesize that the proportions of diﬀerent bird species visiting a suet feeder are the same.
 
 ```{r}
-birds <- c(12,14,11,15)
-
-#Conduct a chi-squared test to test for equal likelihoods of all outcomes
+# Create a sequence of number of different bird types visiting
+# a suet feeder. The numbers represent the following birds:
+# Carolina wrens, cardinals, tufted titmice, and mockingbirds.
+birds <- c(12, 14, 11, 15)
+# Conduct a chi-squared test to test for equal likelihoods of
+# all outcomes.
 chi_test <- chisq.test(birds)
-
-#Examine observed counts
+# Examine observed counts
 chi_test$observed
-
-#Examine expected counts
+# Examine expected counts
 chi_test$expected
-
-#Examine standardized residuals
+# Examine standardized residuals
 chi_test$stdres
-#weight heavily given to last two observations
-
-chi_test
 ```
 
+Practice Problem: Write the results of this chi-squared test as a sentence, including language about the maximum recorded species and the minimum recorded species.
+
+In the above code, we hypothesize that the likelihoods of all possible outcomes are equal.
+
+However, in some instances, you may have reason to believe that outcomes will be unequal. If you want to change the code above to account for diﬀerent expected proportions, you can edit the p= argument in the function to account for this. 
+
+So, for example, if you thought half of all birds would be mockingbirds, with all remaining species
+being approximately equal, you might write the following:
+chisq.test(birds, p = c(0.17, 0.17, 0.16, 0.50))
+
+When there is more than a single outcome, we may use what are called contingency tables to compare
+proportions across multiple categories or groups each with multiple possible outcomes.
+
+In the following example, we will hypothesize that the proportions of diﬀerent bird species visiting diﬀerent feeder types are the same
+
 ```{r}
-wren <- c(12,17,9)
-cardinal <- c(14,20,21)
-titmouse <- c(11,15,7)
-mockingbird <- c(15,4,2)
-
-birdTable <- cbind(wren,cardinal,titmouse,mockingbird)
-
-rownames(birdTable)
+# Create counts of bird species visiting three different feeder
+# types - suet, seed, and mealworm.
+wren <- c(12, 17, 9)
+cardinal <- c(14, 20, 21)
+titmouse <- c(11, 15, 7)
+mockingbird <- c(15, 4, 2)
+# Create data table.
+birdTable <- cbind(wren, cardinal, titmouse, mockingbird)
+# Update column names.
+rownames(birdTable) <- c("Suet", "Seed", "Mealworm")
 ```
 
-```{r}
-#do different species have different food preferences?
+Our research question is: Is there a significant eﬀect of feeder type on bird species occurrence?
+Null Hypothesis: There is no significant association between feeder type and bird species occurrence.
 
-rownames(birdTable) <-  c('Suet','Seed','Mealworm')
-chi_test_table <- chisq.test(birdTable)
-chi_test_table$stdres
-#if positive value, that means that under these categories the mockingbird has more preference on suet compared to other seed
-#mockingbird eating suet and cardinal eating mealworm are what?
-```
+Alternative Hypothesis: There is a significante association between feeder type and bird species occurrence.
+
+Practice Problem: Perform a chi-squared test for the bird data you have just created. Write the results of this chi-squared test as a sentence, including language about the preferred feeder type for each species. Hint,view the standard residuals (e.g., test$stdres) and determine which observations most strongly weigh the
+results of your analysis.
+
+#Data Visualization
+
+To date, we’ve focused primarily on data visualization in the form of figures. But, depending on your dataset,
+presenting raw values in tables can be equally eﬀective. Creating and formatting tables can be challenging in
+various programs, so if you’d like to make table that will retain their formatting, we will practice doing so
+using the gt() function R, which can be used in a normal tidyverse pipe format.
 
 ```{r}
+# Make the bird dataset you created above a dataframe.
 birdDF <- as.data.frame(birdTable)
-
+# Make rownames their own column.
 birdDF <- rownames_to_column(birdDF, var = "Feeder")
-
-bird_gt <- birdDF %>% 
-  gt(rowname_col = "Feeder") %>% 
-  tab_header(title = "Bird Species Counts by Feeder Type") %>% 
-  cols_label(wren = "Carolina Wren",
-             cardinal = "Cardinal",
-             titmouse = "Tufted Titmouse",
-             mockingbird = "Mockingbird") %>% 
-  grand_summary_rows(column = c(wren, cardinal, titmouse, mockingbird),
-                     fns = list(label = "Total") - sum(.,na.rm = TRUE), use_seps = TRUE) %>% 
-  data_color(columns = c(wren, cardinal, titmouse, mockingbird),
-             palette = c("#COD8FO", "#5A7ECB"),
-             alpha = 0.75)
-  
-#Create a table of recorded bird species visitng different feeders
+# Create a table of recorded bird species visiting different feeders.
+bird_gt <- birdDF %>%
+gt(rowname_col = "Feeder") %>% # creates base table
+tab_header(title = "Bird Species Counts by Feeder Type") %>% # adds title
+cols_label(wren = "Carolina Wren",
+cardinal = "Cardinal",
+titmouse = "Tufted Titmouse",
+mockingbird = "Mockingbird") %>% # edits column names
+grand_summary_rows(columns = c(wren, cardinal, titmouse, mockingbird),
+fns = list(label = "Total")~ sum(., na.rm = TRUE),
+use_seps = TRUE) %>% # adds grand total row
+data_color(columns = c(wren, cardinal, titmouse, mockingbird),
+palette = c("#C0D8F0", "#5A7ECB"), # endpoint colors
+alpha = 0.75) # slightly transparent
+# Examine table.
+bird_gt
+# Save out your table as an html file.
+gtsave(bird_gt,
+"bird_feed_table.html",
+path = here()) # optional but good to specify filepath
 ```
 

@@ -1,0 +1,263 @@
+---
+title: "Week 7 Assignment"
+author: "Jessalyn Chuang"
+output: pdf_document
+geometry: margin=2.54cm
+---
+
+```{r}
+# Load necessary packages.
+library(here)
+library(tidyverse)
+#install.packages('dunn.test')
+library(dunn.test)
+library(gt)
+#install.packages('paletteer')
+library(paletteer)
+#install.packages("tibble")
+library(tibble)
+```
+
+#(1) Mann-Whitney U and Wilcoxon Signed-Rank Tests
+
+a. Filter the dataset only for cutthroat trout. Create a figure that helps you to demonstrate
+why their snout-to-fork length (length_1_mm) by forest treatment (section) is not normally
+distributed. Clear-cut regions of the forest are denoted with CC, and old-growth regions of
+the forest are denoted as OG. Run a Mann-Whitney U test to see if ranks of fish lengths are
+significantly diﬀerent between forest treatment types. Write out your findings as you would in
+a report, including measures of central tendency and data spread for both forest treatments.
+
+```{r}
+vertebrates_data <- read.csv(file = here("./Assignments/week7/and_vertebrates.csv"),
+                           stringsAsFactors = TRUE)
+
+trout_data <- filter(vertebrates_data, 
+                              species == "Cutthroat trout")
+
+trout_fig1 <- ggplot(trout_data, aes(x = length_1_mm, fill = section)) +
+  geom_histogram() +
+  scale_fill_manual(values = c("darkorange", "pink", "purple")) +
+  labs(x = "Snout-to-Fork Length (mm)", y = "Count") +
+  facet_grid(.~section) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+trout_fig1
+
+# Save data by section type.
+trout_CC <- trout_data %>%
+filter(section == "CC")
+trout_OG <- trout_data %>%
+filter(section == "OG")
+
+mann_test <- wilcox.test(trout_CC$length_1_mm, trout_OG$length_1_mm,
+paired = FALSE)
+
+mann_test
+
+trout_CC_mean <- mean(trout_CC$length_1_mm, na.rm = TRUE)
+trout_CC_sd <- sd(trout_CC$length_1_mm, na.rm = TRUE)
+
+trout_OG_mean <- mean(trout_OG$length_1_mm, na.rm = TRUE)
+trout_OG_sd <- sd(trout_OG$length_1_mm, na.rm = TRUE)
+```
+
+Cutthroat trout species displayed significant diﬀerences in Snout-to-Fork length as determined by a Mann-Whitney U-Test (W = 55178843, p < 0.001). Therefore, we accept the alternative hypothesis that the ranks of the Snout-to-Fork length for Cutthroat trout in Clear-Cut regions (mean = 85.31 mm, s.d. = 36.03 mm) and Old-Growth regions (mean = 981.43 mm, s.d. = 34.46 mm) are significantly different.
+
+b. Navigate to Canvas and download the trout_recapture.csv dataset; these data are originally
+part of the and_vertebrates.csv dataset, but they have been filtered to include only trout that
+were captured and tagged in 2014 and then re-captured in 2015. Create a figure that helps you
+demonstrate why their snout-to-fork length (length_1_mm) by year is not normally distributed.
+Run a Wilcoxon Signed-Rank test to see if ranks of fish lengths are significantly diﬀerent
+between years. Write out your findings as you would in a report, including measures of
+central tendency and data spread for both years.
+
+```{r}
+trout_recapture <- read.csv(file = here("./Assignments/week7/trout_recapture_v2.csv"),
+                           stringsAsFactors = TRUE)
+
+trout_fig2 <- ggplot(trout_recapture, aes(x = length_1_mm, fill = factor(year))) +
+  geom_histogram() +
+  scale_fill_manual(values = c("darkorange", "pink")) +
+  labs(x = "Snout-to-Fork Length (mm)", y = "Count") +
+  facet_grid(.~year) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+trout_fig2
+
+# Save data by year.
+trout_2014 <- trout_recapture %>%
+filter(year == 2014)
+trout_2015 <- trout_recapture %>%
+filter(year == 2015)
+
+wilcox_test <- wilcox.test(trout_2014$length_1_mm, trout_2015$length_1_mm,
+paired = TRUE)
+
+wilcox_test
+
+trout_2014_mean <- mean(trout_2014$length_1_mm, na.rm = TRUE)
+trout_2014_sd <- sd(trout_2014$length_1_mm, na.rm = TRUE)
+
+trout_2015_mean <- mean(trout_2015$length_1_mm, na.rm = TRUE)
+trout_2015_sd <- sd(trout_2015$length_1_mm, na.rm = TRUE)
+```
+
+Recaptured Cutthroat trout displayed significant diﬀerences in Snout-to-Fork length as determined by a Wilcoxon Signed-Rank Test (V = 625.5, p < 0.001). Therefore, we accept the alternative hypothesis that the ranks of the Snout-to-Fork length for Cutthroat trout in 2014 (mean = 105.48 mm, s.d. = 17.27 mm) and 2015 (mean = 119.63 mm, s.d. = 14.84 mm) are significantly different.
+
+#(2) Kruskal Wallis and post-hoc Dunn’s Tests
+
+a. Using the dataset you created above including only cutthroat trout, create a figure that
+helps you to demonstrate why their snout-to-fork length (length_1_mm) by reach (reach) is
+not normally distributed. Having verified this, run a Kruskal Wallis test to see if ranks of
+fish lengths are significantly diﬀerent among stream reaches. If you find there is a significant
+diﬀerence between at least two reaches, run a Dunn’s test. Write out your findings as you
+would in a report, including a measure of central tendency and data spread for all three reach
+sections.
+
+```{r}
+trout_fig3 <- ggplot(trout_data, aes(x = length_1_mm, fill = reach)) +
+  geom_histogram() +
+  scale_fill_manual(values = c("darkorange", "pink", "purple")) +
+  labs(x = "Snout-to-Fork Length (mm)", y = "Count") +
+  facet_grid(.~reach) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+trout_fig3
+
+kruskal_test <- kruskal.test(length_1_mm ~ reach, data = trout_data)
+
+kruskal_test
+
+# There is a significant difference between at least two reaches
+dunn_test <- dunn.test(trout_data$length_1_mm, trout_data$reach)
+
+# Save data by reach.
+trout_L <- trout_data %>%
+filter(reach == "L")
+trout_M <- trout_data %>%
+filter(reach == "M")
+trout_U <- trout_data %>%
+filter(reach == "U")
+
+trout_L_mean <- mean(trout_L$length_1_mm, na.rm = TRUE)
+trout_L_sd <- sd(trout_L$length_1_mm, na.rm = TRUE)
+
+trout_M_mean <- mean(trout_M$length_1_mm, na.rm = TRUE)
+trout_M_sd <- sd(trout_M$length_1_mm, na.rm = TRUE)
+
+trout_U_mean <- mean(trout_U$length_1_mm, na.rm = TRUE)
+trout_U_sd <- sd(trout_U$length_1_mm, na.rm = TRUE)
+```
+
+Cutthroat trout species displayed significant diﬀerences in Snout-to-Fork length as determined by a Kruskall-Wallis Rank Sum Test (χ²(2) = 77.394, p < 0.001). Post-hoc testing by Dunn's Test revealed that ranks of fish lengths are significantly different between L reach (mean = 81.60 mm, s.d. = 34.71 mm) and M reach (mean = 87.01 mm, s.d. = 36.09 mm), and between M reach and U reach (mean = 82.19 mm, s.d. = 35.11 mm). There is no significant difference between L and U reaches.
+
+b. Create a figure with an appropriate caption to display fish lengths by reach, including
+notation to indicate the results of the Kruskal Wallis and Dunn’s tests (letters, etc.).
+
+```{r}
+letters_df <- tibble(
+  reach = c("L", "M", "U"),
+  Letter = c("a", "b", "a") # Corrected assignment
+)
+
+trout_summary <- trout_data %>%
+  group_by(reach) %>%
+  summarise(mean_length = mean(length_1_mm, na.rm = TRUE),
+            sd_length = sd(length_1_mm, na.rm = TRUE),
+            max_length = max(length_1_mm, na.rm = TRUE)) %>%
+  left_join(letters_df, by = "reach")
+
+# Create a boxplot with significance letters
+trout_fig4 <- ggplot(trout_data, aes(x = reach, y = length_1_mm, fill = reach)) +
+  geom_boxplot() +
+  geom_text(data = trout_summary, aes(x = reach, y = max_length + 10, label = Letter), 
+            size = 6, vjust = 0) +  # Position letters correctly
+  scale_fill_manual(values = c("darkorange", "pink", "purple")) +
+  labs(x = "Reach", y = "Snout-to-Fork Length (mm)", fill = "Reach",
+       title = "Fish Length by Reach") +
+  theme_bw() +
+  theme(legend.position = "none")
+
+# Display the final plot
+print(trout_fig4)
+cat("This boxplot shows the distribution of fish length across different reaches (L, M, U). The letters above each box indicate statistical groupings based on Dunn’s post-hoc test. Groups sharing the same letter are not significantly different, whereas groups with different letters indicate a significant difference in fish length (α = 0.05).")
+```
+
+#(3) Contingency Tables and the Chi-Squared Test
+
+a. Using the dataset you created above including only cutthroat trout, create a contingency
+table that includes counts of trout found in diﬀerent channel habitat types (unittype) by reach
+(reach). If you’re unsure how to create this kind of table, think back to the group_by() and
+summarize() functions you learned last week. Also, you may want to explore the pivot_wider()
+and pivot_longer() functions for pivoting data from long to wide format. Create a table using
+the gt() function with an appropriate caption to display raw fish counts.
+
+```{r}
+trout_summary_unittypebyreach <- trout_data %>%
+  group_by(unittype, reach) %>%
+  summarize(count = n(), .groups = "drop")
+
+habitatbyreach_table <- trout_summary_unittypebyreach %>%
+  select(unittype, reach, count) %>% 
+  pivot_wider(names_from = reach, values_from = count)
+
+# Make this table a dataframe
+habitatbyreach_df <- as.data.frame(habitatbyreach_table)
+
+# Add row totals
+habitatbyreach_df <- habitatbyreach_df %>%
+  mutate(Total = rowSums(select(., L, M, U), na.rm = TRUE))
+
+habitat_gt <- habitatbyreach_df %>%
+  gt() %>%
+  tab_header(title = "Fish Habitat Counts by Reach") %>% 
+  cols_label(
+    unittype = "Habitat Type",
+    L = "L Reach",
+    M = "M Reach",
+    U = "U Reach",
+    Total = "Total" 
+  ) %>%
+  grand_summary_rows(
+    columns = c(L, M, U, Total),  
+    fns = list(Total = ~sum(., na.rm = TRUE)) 
+  ) %>%
+  data_color(
+    columns = c(L, M, U),
+    palette = c("#C0D8F0", "#5A7ECB"),
+    alpha = 0.75
+  )
+
+# Display the table
+habitat_gt
+
+```
+
+b. Before proceeding further, write out your null and alternative hypotheses for performing a
+chi-squared test on this dataset. Then, run a chi-squared test on the counts dataset you have
+created. You may want to use the column_to_rownames() function to make sure the only values
+in cells of your contingency table are trout counts before running your chi-squared test. Write
+out your findings as you would in a report, including language about the habitat type where
+most fish are counted in each reach.
+
+Null hypothesis: There is no significant association between habitat type and reach for Cutthroat trout.
+
+Alternative hypothesis: There is a significant association between habitat type and reach for Cutthroat trout.
+
+```{r}
+habitat_matrix <- habitatbyreach_df %>%
+  filter(!is.na(unittype)) %>%  # Remove NA rows in unittype
+  column_to_rownames(var = "unittype") %>%  # Convert unittype to row names
+  select(L, M, U) %>%  # Keep only numeric columns
+  replace(is.na(.), 0)  # Replace NA counts with 0
+
+# Run Chi-Square test
+chi_test <- chisq.test(habitat_matrix)
+
+chi_test
+```
+
+There is a significant association between habitat and reach for Cutthroat trout (χ²(12) = 1914.4, p<0.001).
