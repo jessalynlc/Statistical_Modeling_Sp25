@@ -30,6 +30,9 @@ significantly diﬀerent between forest treatment types. Write out your findings
 a report, including measures of central tendency and data spread for both forest treatments.
 
 ```{r}
+#Null: There is no significant difference in ranks between CC and OG trout.
+#Alt: There is a significant difference in ranks between CC and OG trout.
+
 vertebrates_data <- read.csv(file = here("./Assignments/week7/and_vertebrates.csv"),
                            stringsAsFactors = TRUE)
 
@@ -46,6 +49,8 @@ trout_fig1 <- ggplot(trout_data, aes(x = length_1_mm, fill = section)) +
 
 trout_fig1
 
+cat("These distributions are not normally distributed because they exhibit multiple peaks (multimodality) and skewness. The left histogram (CC) has two prominent peaks, indicating possible subpopulations, while the right histogram (OG) shows a right-skewed distribution with an uneven spread. Normal distributions are unimodal and symmetric, which these are not.")
+
 # Save data by section type.
 trout_CC <- trout_data %>%
 filter(section == "CC")
@@ -57,14 +62,14 @@ paired = FALSE)
 
 mann_test
 
-trout_CC_mean <- mean(trout_CC$length_1_mm, na.rm = TRUE)
-trout_CC_sd <- sd(trout_CC$length_1_mm, na.rm = TRUE)
+trout_CC_median <- median(trout_CC$length_1_mm, na.rm = TRUE)
+trout_CC_IQR <- IQR(trout_CC$length_1_mm, na.rm = TRUE)
 
-trout_OG_mean <- mean(trout_OG$length_1_mm, na.rm = TRUE)
-trout_OG_sd <- sd(trout_OG$length_1_mm, na.rm = TRUE)
+trout_OG_median <- median(trout_OG$length_1_mm, na.rm = TRUE)
+trout_OG_IQR <- IQR(trout_OG$length_1_mm, na.rm = TRUE)
 ```
 
-Cutthroat trout species displayed significant diﬀerences in Snout-to-Fork length as determined by a Mann-Whitney U-Test (W = 55178843, p < 0.001). Therefore, we accept the alternative hypothesis that the ranks of the Snout-to-Fork length for Cutthroat trout in Clear-Cut regions (mean = 85.31 mm, s.d. = 36.03 mm) and Old-Growth regions (mean = 981.43 mm, s.d. = 34.46 mm) are significantly different.
+Cutthroat trout species displayed significant diﬀerences in Snout-to-Fork length as determined by a Mann-Whitney U-Test (U = 55178843, p < 0.001). Therefore, we accept the alternative hypothesis that the ranks of the Snout-to-Fork length for Cutthroat trout in Clear-Cut regions (median = 88 mm, IQR = 61 mm) and Old-Growth regions (median = 84 mm, IQR = 60 mm) are significantly different.
 
 b. Navigate to Canvas and download the trout_recapture.csv dataset; these data are originally
 part of the and_vertebrates.csv dataset, but they have been filtered to include only trout that
@@ -75,6 +80,8 @@ between years. Write out your findings as you would in a report, including measu
 central tendency and data spread for both years.
 
 ```{r}
+#Null: The ranks of the fish lengths in 2014 and in 2015 are equal.
+#Alternative: The ranks of the fish lengths in 2014 and in 2015 are not equal.
 trout_recapture <- read.csv(file = here("./Assignments/week7/trout_recapture_v2.csv"),
                            stringsAsFactors = TRUE)
 
@@ -88,6 +95,8 @@ trout_fig2 <- ggplot(trout_recapture, aes(x = length_1_mm, fill = factor(year)))
 
 trout_fig2
 
+cat("These distributions are not normally distributed because they exhibit multimodality and skewness. The 2014 distribution has multiple peaks and gaps, indicating subpopulations, while the 2015 distribution is asymmetrical with a long tail. Normal distributions should be unimodal and symmetric, which these are not.")
+
 # Save data by year.
 trout_2014 <- trout_recapture %>%
 filter(year == 2014)
@@ -99,14 +108,14 @@ paired = TRUE)
 
 wilcox_test
 
-trout_2014_mean <- mean(trout_2014$length_1_mm, na.rm = TRUE)
-trout_2014_sd <- sd(trout_2014$length_1_mm, na.rm = TRUE)
+trout_2014_median <- median(trout_2014$length_1_mm, na.rm = TRUE)
+trout_2014_IQR <- IQR(trout_2014$length_1_mm, na.rm = TRUE)
 
-trout_2015_mean <- mean(trout_2015$length_1_mm, na.rm = TRUE)
-trout_2015_sd <- sd(trout_2015$length_1_mm, na.rm = TRUE)
+trout_2015_median <- median(trout_2015$length_1_mm, na.rm = TRUE)
+trout_2015_IQR <- IQR(trout_2015$length_1_mm, na.rm = TRUE)
 ```
 
-Recaptured Cutthroat trout displayed significant diﬀerences in Snout-to-Fork length as determined by a Wilcoxon Signed-Rank Test (V = 625.5, p < 0.001). Therefore, we accept the alternative hypothesis that the ranks of the Snout-to-Fork length for Cutthroat trout in 2014 (mean = 105.48 mm, s.d. = 17.27 mm) and 2015 (mean = 119.63 mm, s.d. = 14.84 mm) are significantly different.
+Recaptured Cutthroat trout displayed significant diﬀerences in Snout-to-Fork length as determined by a Wilcoxon Signed-Rank Test (V = 625.5, p < 0.001). Therefore, we accept the alternative hypothesis that the ranks of the Snout-to-Fork length for Cutthroat trout in 2014 (median = 103.5 mm, IQR = 23.25 mm) and 2015 (median = 118 mm, IQR = 19 mm) are significantly different.
 
 #(2) Kruskal Wallis and post-hoc Dunn’s Tests
 
@@ -119,6 +128,9 @@ would in a report, including a measure of central tendency and data spread for a
 sections.
 
 ```{r}
+#Null: The ranks of trout across L, M, and U stream reaches are equal.
+#Alt: The ranks of trout across L, M, and U stream reaches are not equal.
+
 trout_fig3 <- ggplot(trout_data, aes(x = length_1_mm, fill = reach)) +
   geom_histogram() +
   scale_fill_manual(values = c("darkorange", "pink", "purple")) +
@@ -128,6 +140,8 @@ trout_fig3 <- ggplot(trout_data, aes(x = length_1_mm, fill = reach)) +
   theme(legend.position = "none")
 
 trout_fig3
+
+cat("These distributions are not normally distributed due to multimodality, skewness, and asymmetry. Each category (L, M, U) exhibits multiple peaks, suggesting the presence of subpopulations. Additionally, the distributions are right-skewed, with a longer tail extending towards higher Snout-to-Fork lengths. Normal distributions should be unimodal and symmetric, which these are not.")
 
 kruskal_test <- kruskal.test(length_1_mm ~ reach, data = trout_data)
 
@@ -144,17 +158,17 @@ filter(reach == "M")
 trout_U <- trout_data %>%
 filter(reach == "U")
 
-trout_L_mean <- mean(trout_L$length_1_mm, na.rm = TRUE)
-trout_L_sd <- sd(trout_L$length_1_mm, na.rm = TRUE)
+trout_L_median <- median(trout_L$length_1_mm, na.rm = TRUE)
+trout_L_IQR <- IQR(trout_L$length_1_mm, na.rm = TRUE)
 
-trout_M_mean <- mean(trout_M$length_1_mm, na.rm = TRUE)
-trout_M_sd <- sd(trout_M$length_1_mm, na.rm = TRUE)
+trout_M_median <- median(trout_M$length_1_mm, na.rm = TRUE)
+trout_M_IQR <- IQR(trout_M$length_1_mm, na.rm = TRUE)
 
-trout_U_mean <- mean(trout_U$length_1_mm, na.rm = TRUE)
-trout_U_sd <- sd(trout_U$length_1_mm, na.rm = TRUE)
+trout_U_median <- median(trout_U$length_1_mm, na.rm = TRUE)
+trout_U_IQR <- IQR(trout_U$length_1_mm, na.rm = TRUE)
 ```
 
-Cutthroat trout species displayed significant diﬀerences in Snout-to-Fork length as determined by a Kruskall-Wallis Rank Sum Test (X²(2) = 77.394, p < 0.001). Post-hoc testing by Dunn's Test revealed that ranks of fish lengths are significantly different between L reach (mean = 81.60 mm, s.d. = 34.71 mm) and M reach (mean = 87.01 mm, s.d. = 36.09 mm), and between M reach and U reach (mean = 82.19 mm, s.d. = 35.11 mm). There is no significant difference between L and U reaches.
+Cutthroat trout species displayed significant diﬀerences in Snout-to-Fork length as determined by a Kruskall-Wallis Rank Sum Test (X²(2) = 77.394, p < 0.001). Post-hoc testing by Dunn's Test revealed that ranks of fish lengths are significantly different between L reach (median = 86 mm, IQR = 59 mm) and M reach (median = 89 mm, IQR = 63 mm), and between M reach and U reach (median = 86 mm, IQR = 61 mm). There is no significant difference between L and U reaches with p value required to be less than alpha / 2 (where alpha is 0.05).
 
 b. Create a figure with an appropriate caption to display fish lengths by reach, including
 notation to indicate the results of the Kruskal Wallis and Dunn’s tests (letters, etc.).
@@ -162,7 +176,7 @@ notation to indicate the results of the Kruskal Wallis and Dunn’s tests (lette
 ```{r}
 letters_df <- tibble(
   reach = c("L", "M", "U"),
-  Letter = c("a", "b", "a") # Corrected assignment
+  Letter = c("a", "b", "a") 
 )
 
 trout_summary <- trout_data %>%
@@ -245,9 +259,9 @@ in cells of your contingency table are trout counts before running your chi-squa
 out your findings as you would in a report, including language about the habitat type where
 most fish are counted in each reach.
 
-Null hypothesis: There is no significant association between habitat type and reach for Cutthroat trout.
+Null Hypothesis: The likelihoods of all possible outcomes for habitat type and reach combinations for Cutthroat trout are the same. 
 
-Alternative hypothesis: There is a significant association between habitat type and reach for Cutthroat trout.
+Alternative Hypothesis: TThe likelihoods of all possible outcomes for habitat type and reach combinations for Cutthroat trout are not the same.
 
 ```{r}
 habitat_matrix <- habitatbyreach_df %>%
@@ -259,7 +273,12 @@ habitat_matrix <- habitatbyreach_df %>%
 # Run Chi-Square test
 chi_test <- chisq.test(habitat_matrix)
 
-chi_test
+chi_test$observed
+chi_test$expected
+chi_test$stdres
+chi_test$parameter #for finding degrees of freedom
 ```
 
-There is a significant association between habitat and reach for Cutthroat trout (X²(12) = 1914.4, p<0.001).
+There is a significant association between habitat and reach for Cutthroat trout (X²(12) = 1914.4, p<0.001). The most trout were found in Cascade (C) habitat in the Lower (L) reach, Cascade (C) habitat in the Middle (M) reach, and Cascade (C) habitat in the Upper (U) reach.
+
+Standardized residuals revealed that trout were more abundant than anticipated in the SC habitat in the L reach (std res = 19.85), in the SC habitat in the M reach (std res = 16.39), and in the R habitat in the U reach (std res = 2.66). Meanwhile, trout were observed less than expected in the SC habitat in the U reach (std res = -35.45), C habitat and M reach (std res = -20.10), and teh P habitat and L reach (-19.44).

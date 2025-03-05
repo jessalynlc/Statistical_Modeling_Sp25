@@ -1,0 +1,271 @@
+Lab 8: Linear Regression
+
+In this lab, we will learn regression approaches and ways of comparing different models. The learning goals of this lab are to:
+
+Run a linear regression using the lm() function
+Evaluate the results of a linear regression using the plot() function
+Consider multi-collinearity of predictors using the cor.test() function
+Compare different model structures using the AIC() function
+In the first part of today’s lab, your instructor will walk through the code and relevant functions with you.
+
+In the second part of today’s lab, you will be asked to complete your assignments in a new R Markdown file. Please be sure to answer assignment questions using full sentences, including information as you would in a final report. Submit your R Markdown .Rmd file rendered as a .pdf to the class Canvas site under the Assignments folder. Lab assignments are due at 11:59pm the day before your next lab session meets.
+
+#Setup
+Create a new project for this week’s lab named week8 in the ENV710 folder. Open and save a new R Markdown script named week8script.Rmd in this project. Edit the title of the script accordingly, and add a first Setup header to your script. Then, create and run a new code chunk to load in the packages and data you will use today.
+
+The data for this week, "hbr_maples.csv", was collected by the Hubbard Brook Long Term Ecological Research program based at Hubbard Brook Experimental Forest in the White Mountains in New Hampshire. Here, we are interested in looking at the growth of sugar maple seedlings in two watersheds, one that is a reference watershed with no treatment and one that is watershed 1 (W1) which received calcium additions to better support sugar maple growth and offset the effects of soil acidification due to acid rain.
+
+```{r}
+library(here)
+library(tidyverse)
+
+maples <- read_csv(here("./Labs/week8/hbr_maples.csv"))
+```
+
+#Linear Regression
+In the first part of today’s lab, we will perform a single variable regression and become familiar with the outputs in R. Create a new header labeled Linear Regression in your script.
+
+##Step 1 - Define your research question.
+Today, we are first interested in addressing the question, is there a relationship between seedling height and mass?
+
+##Step 2 - Examine your data and possible correlations.
+
+```{r}
+# Create and examine histograms of raw values.
+(hist1 <- ggplot(maples, aes(x = stem_length)) +  
+    geom_histogram() +  
+    theme_bw())  
+
+(hist2 <- ggplot(maples, aes(x = stem_dry_mass)) +  
+    geom_histogram() +  
+    theme_bw())  
+
+# Create and examine an initial scatterplot of data.
+(scatter1 <- ggplot(maples, aes(x = stem_length, y = stem_dry_mass)) +  
+    geom_point() +  
+    theme_bw()) 
+```
+
+Practice Problem: What do you notice about the distribution of raw data values? Based on your initial scatterplot, what relationship do you anticipate will appear in the linear regression results?
+
+##Step 3 - Fit regression model.
+```{r}
+# Fit linear regression model with one dependent variable (mass) and one 
+# independent variable (length) 
+maple.lm1 <- lm(stem_dry_mass ~ stem_length, data = maples)  
+
+# Examine the results.
+summary(maple.lm1)
+```
+
+Practice Problem: Using the appropriate R-squared value given your model structure, what percentage of variance in your data is explained by this model?
+
+##Step 4 - Evaluate model diagnostics.
+Remember, some of the key assumptions that must be met when performing a linear regression are focused on the model residuals, meaning you must first fit the model to your data and then examine the model fit.
+
+```{r}
+# Examine model residual plots (4 in total).
+plot(maple.lm1)
+```
+
+Note: Since we are working in an R Markdown, these plots will populate automatically below a given code chunk. However, if you would like to run this same code in a plain R script, you will need some additional preparatory lines:
+
+```{r}
+windows() # quartz() if on a Mac  
+
+par(mfrow = c(2,2))  
+
+plot(linearmodel)
+```
+
+There don’t appear to be any visible outliers, particularly ones that surpass the Cook’s distance. However, in the very first plot, there does appear to be evidence of heteroscedasticity, with variance increasing as you progress along the x-axis. So, let’s employ a data transformation to see if we can help with this issue.
+
+```{r}
+# Log-transform mass values since these appeared skewed at the start.
+maples$log_stem_dry_mass <- log10(maples$stem_dry_mass)
+
+# Re-fit model using these values.
+maple.lm2 <- lm(log_stem_dry_mass ~ stem_length, data = maples)
+
+# Examine the results and the residuals.
+summary(maple.lm2)
+
+plot(maple.lm2)
+
+```
+Practice Problem: What changes in the model residuals plots do you notice in this newer version of the model?
+
+##Step 5 - Communicate the results.
+We feel confident that the model meets the assumptions, so we communicate our findings:
+
+The results of a linear regression suggest that sugar maple seedling height significantly predicts stem mass (F(1,357) = 130.4, p < 0.001, Adjusted R² = 0.27), with seedling height displaying a significant positive relationship with stem mass (B = 0.009, p < 0.001). Prior to fitting the model, stem mass data were log-transformed. The final model fit was visually inspected to assess model residuals for outliers and homoscedasticity.
+
+##Bonus - Predicted values.
+If you would like to display actual data values that exist in your original dataset as well as predicted values given your chosen model structure, you can use the fitted() function. For example, fitted(maple.lm2) will create a vector of values that are the predicted seedling masses if the model inputs are the same as the predictor variable values (and remember we log-transformed these at the start, so we’ll need to take that into account when plotting).
+
+```{r}
+# Create a new column of predicted seedling mass values based on your
+# model results and using the original seedling height input values.
+mass_predict <- fitted(maple.lm2)
+
+# Add these values to your original dataset for plotting purposes.
+maples <- maples %>%
+  mutate(log_mass_predict = mass_predict) %>% # log-transformed values
+  mutate(stem_dry_mass_predict = 10^(log_mass_predict)) # un-transformed values
+
+# Plot these results.
+(scatter2 <- ggplot(maples, aes(x = stem_length)) +
+  
+  # first the predicted values
+  geom_point(aes(y = stem_dry_mass_predict), color = "darkolivegreen3") +
+  
+  # then the raw data
+  geom_point(aes(y = stem_dry_mass), color = "black") +
+  
+  # don't forget axis labels with units
+  labs(x = "Seedling Height (mm)", 
+       y = "Seedling Mass (g)") +
+  
+  # and this is an optional way to transform your axis
+  scale_y_log10() +
+  theme_bw())
+```
+
+#Multiple Linear Regression
+In the second part of today’s lab, you will build multiple linear regression models and become familiar with how to compare their model fits. Create a new header labeled Multiple Linear Regression in your script.
+
+##Step 1 - Define your research question.
+In this second part of the lab, we are interested in addressing the question, is seedling mass significantly predicted by seedling height, leaf mass, leaf area, calcium treatment, and elevation?
+
+Practice Problem: Before building your model, consider how the above factors influence your results. Do you think leaf mass or leaf area will have a relationship (positive or negative) with seedling mass? Will calcium treatment or elevation influence seedling mass? Why or why not? Add your hypotheses into your script.
+- Leaf mass and area might have a positive relationship with seedling mass
+- More calcium might lead to higher mass
+- Higher elevation may lead to lower seedling mass
+
+##Step 2 - Examine your data and possible correlations.
+Using the workflow above, create figures to explore the data distribution and relationships with the dependent variable (stem_dry_mass) for all of the possible covariates or independent variables:
+
+stem_length (seedling height in millimeters)
+```{r}
+# Create and examine an initial scatterplot of data.
+(scatter_stem_length <- ggplot(maples, aes(x = stem_length, y = stem_dry_mass)) +  
+    geom_point() +  
+    theme_bw()) 
+```
+
+leaf_dry_mass (leaf dry mass in grams from 2 combined leaf samples)
+```{r}
+# Create and examine an initial scatterplot of data.
+(scatter_leaf_dry_mass <- ggplot(maples, aes(x = leaf_dry_mass, y = stem_dry_mass)) +  
+    geom_point() +  
+    theme_bw()) 
+```
+
+corrected_leaf_area (leaf area in square centimeters)
+```{r}
+# Create and examine an initial scatterplot of data.
+(corrected_leaf_area <- ggplot(maples, aes(x = corrected_leaf_area, y = stem_dry_mass)) +  
+    geom_point() +  
+    theme_bw()) 
+```
+
+watershed (W1 is the calcium-treated watershed)
+```{r}
+# Create and examine an initial scatterplot of data.
+(corrected_calcium <- ggplot(maples, aes(x = watershed, y = stem_dry_mass)) +  
+    geom_point() +  
+    theme_bw()) 
+```
+
+elevation (including Low and Mid-elevation sites)
+```{r}
+# Create and examine an initial scatterplot of data.
+(corrected_elevation <- ggplot(maples, aes(x = elevation, y = stem_dry_mass)) +  
+    geom_point() +  
+    theme_bw()) 
+```
+
+What do you notice about the data distributions? What relationships do you anticipate with seedling mass (stem_dry_mass) in the linear regression model?
+They generally seem to all have a linear relationship. Those with Calcium have a slightly larger spread than the reference, and the lower elevation saplings seem to have a wider spread, though they could be outliers.
+
+To investigate the possibility of multi-collinearity, use the cor.test() function to test for possible correlations among the continuous variables included in your model. If you are unsure how to input the data, learn more about the function by typing ?cor.test() into your console.
+
+```{r}
+#cor.test can only be done pairwise, two variables at a time
+cor.test(x = maples$stem_length, y = maples$leaf_dry_mass)
+cor.test(x = maples$stem_length, y = maples$corrected_leaf_area)
+cor.test(x = maples$leaf_dry_mass, y = maples$corrected_leaf_area)
+```
+
+Are there any variables from your initial list that are strongly correlated with one another?
+It looks like leaf_dry_mass and corrected_leaf_area are correlated (cor value of 0.62 which is > 0.6) and they have statistically significant correlation. So we can't include both in our result
+
+When can we say two values have multicollinearity?
+First p-value is significant, and second correlation is above 0.6
+
+##Step 3 - Fit regression model(s).
+Based on our findings above, we will fit two models so that we can include a measure of leaf data, but not include variables that we found to be correlated with one another.
+
+Using the same lm() function you used above, fit two multiple linear regression models named maples.lm1 and maples.lm2 with the following structures:
+
+seedling mass = seedling height + leaf mass + watershed area + elevation
+seedling mass = seedling height + leaf area + watershed area + elevation
+Note, given your previous model results, you may choose to continue to use the log-transformed data for seedling mass to encourage your model residuals to display homoscedasticity.
+
+```{r}
+#maples.mlm2.1 <- lm(data = maples, stem_dry_mass ~ stem_length + leaf_dry_mass + corrected_leaf_area + watershed elevationMid)
+```
+
+inflated standard error if we can include multicollinearity, in some settings the variable importance might be inflated when it's not actually that impactful?
+
+ommitted variable bias: we will try to control more variables in social sciences because the ommitted variable bias is more severe than multicollinearity problems, so tend to keep variables even if there is multicollinearity
+
+Use the summary() function you used above to examine the results of both models. Do the coefficients for the independent variables in each model make sense given your initial hypotheses and data exploration?
+
+##Step 4 - Evaluate model diagnostics.
+Examine the model residuals for both models using the plot() function you learned above. Notice how there is a significant outlier in the first model results.
+
+To remove this outlier, you may use the following structure to create a new dataset without this row of data. Here, the example is removing the 4th row:
+
+```{r}
+new_data <- old_data[-4,]
+```
+
+Remove the necessary outlier from your dataset and re-fit your two linear regression models. Then, re-evaluate your model fits using the plot() function. Do you now feel confident that your model residuals meet the necessary assumptions?
+
+Since you have more than one model, to compare how well they each describe the variability in the data, you may use Akaike Information Criterion, or AIC, values to describe them relative to one another. Remember, AIC values are only comparable between similar model structures and models that have been fit to the same data. Lower values indicate a better model fit. You may use the following code to save the AIC values for the models you have generated:
+
+```{r}
+lm1_AIC <- AIC(lm1)
+```
+
+Which model do the AIC values suggest displays a better fit?
+
+Note, here we are using AIC values to compare between models that use the same underlying data and differ only in the variables included. Another reason people frequently use AIC values is to trim down the number of variables in a model. If this is your goal, you must think critically about the step-wise removal of any variables.
+
+##Step 5 - Communicate the results.
+Based on the example text from the previous linear regression model you ran and the sample text provided in class, report the results of your selected multiple linear regression model in text form, including R² values and measures of significance for the overall model in addition to covariate coefficient values and measures of their individual significance. Take care in how you report continuous versus categorical variables.
+
+##Bonus - Interaction terms.
+In some cases, you may have variables that do not display multi-collinearity, so they can be used in the same model, but you may have some underlying information about the system that suggests that the two variables may have a relationship for other reasons. For example, you may hypothesize that the calcium treatment in Watershed 1 might have a positive effect on seedling height (i.e., the addition of calcium decreased soil acidity enough to support faster plant growth), even if your data doesn’t display a relationship. When this is the case, you may include two variables as an interaction term in the model. The model will then estimate a coefficient for the first term, the second term, and their interaction. To see what this looks like, fit the following model:
+
+seedling mass = (seedling height × watershed area) + leaf mass + elevation
+
+
+Using the summary() function, examine the coefficients that are provided. Does the interaction appear significant?
+
+#Notes from Xingchen:
+
+lm(dependent variable ~ independent variable, data)
+
+27% of data can be explained by simple linear regression model
+Adjusted R square: when you add more independent variables into the model, it will give you a higher predictive variable, it can cause overfitting problems, so adjusted R squared problems penalizes for adding more independent variables into model
+
+quartz() and par() --> don't include these in rmd files, only run if you are using r script
+- if you run in rmd file, you would have to click return to give you four different plots
+
+Scale-location - sometimes if there is a significant trend instead of flatter line, means there are heterscedastic tendency (variance not constant)
+
+No significant outline (no points under Cook's Distance)
+
+fitted(): using the x variables times coefficient plus intercept to give us predicted values

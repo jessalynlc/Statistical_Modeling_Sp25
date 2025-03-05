@@ -1,0 +1,34 @@
+---
+title: "Week 8 Assignment"
+author: "Jessalyn Chuang"
+output:
+  html_document:
+    df_print: paged
+geometry: margin=2.54cm
+---
+
+Your research question for this assignment is
+What demographic factors significantly predict outdoor recreation acreage at the county level across 20 North Carolina counties?
+
+Load, tidy, and combine the datasets in RStudio. Filter the Office of State Budget data to include only data for the 20 relevant counties (see census data) and sum together local, state, and federal recreation acreage to form your outcome or dependent variable: total recreation acreage by county. Filter the census data down to include only the following ten items:
+
+Population estimates, July 1, 2023 (V2023)
+Persons under 18 years, percent
+Persons 65 years and over, percent
+Female persons, percent
+White alone, percent
+Black or African American alone, percent (a)
+Hispanic or Latino, percent (b)
+Median value of owner-occupied housing units, 2019-2023
+Persons per household, 2019-2023
+Median household income (in 2023 dollars), 2019-2023
+Using the workflow presented in lab, perform a multiple linear regression to investigate potential predictors of total outdoor recreation acreage.
+You must decide which of the initial 10 variables make sense to include based on your conceptual understanding of relevant factors, model outputs, diagnostics, and comparative model fits (AIC values). There is no “right answer” for this analysis—make an informed decision based on the data and understanding that you have.
+
+In 6-8 sentences, narrate your decision-making.
+Justify your inclusion of certain variables, investigation of any collinearity of variables, and model diagnostics. Did you choose to log-transform any data? Did you have concerns after exploring any of the model diagnostics? If so, how did that change your model selection? Please be sure to include information that helped you determine whether multi-collinearity, heteroscedasticity, or poor model fit was a concern.
+
+In 3-4 sentences, describe the final model output as you would for a final report.
+
+Works Cited:
+Juice, S. and T. Fahey (2019). Health and mycorrhizal colonization response of sugar maple (Acer saccharum) seedlings to calcium addition in Watershed 1 at the Hubbard Brook Experimental Forest ver 3. Environmental Data Initiative. https://doi.org/10.6073/pasta/0ade53ede9a916a36962799b2407097e
