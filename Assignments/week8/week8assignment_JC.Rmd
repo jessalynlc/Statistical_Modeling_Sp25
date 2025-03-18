@@ -7,10 +7,10 @@ output:
 geometry: margin=2.54cm
 ---
 
-Your research question for this assignment is
-What demographic factors significantly predict outdoor recreation acreage at the county level across 20 North Carolina counties?
+Your research question for this assignment is - What demographic factors significantly predict outdoor recreation acreage at the county level across 20 North Carolina counties?
 
-Load, tidy, and combine the datasets in RStudio. Filter the Office of State Budget data to include only data for the 20 relevant counties (see census data) and sum together local, state, and federal recreation acreage to form your outcome or dependent variable: total recreation acreage by county. Filter the census data down to include only the following ten items:
+#(1) 
+Load, tidy, and combine the datasets in RStudio. Filter the Office of State Budget data to include only data for the 20 relevant counties (see census data) and sum together local, state, and federal recreation acreage to form your outcome or dependent variable value of total recreation acreage by county. Filter the census data down to include only the following ten items:
 
 Population estimates, July 1, 2023 (V2023)
 Persons under 18 years, percent
@@ -22,12 +22,249 @@ Hispanic or Latino, percent (b)
 Median value of owner-occupied housing units, 2019-2023
 Persons per household, 2019-2023
 Median household income (in 2023 dollars), 2019-2023
-Using the workflow presented in lab, perform a multiple linear regression to investigate potential predictors of total outdoor recreation acreage.
-You must decide which of the initial 10 variables make sense to include based on your conceptual understanding of relevant factors, model outputs, diagnostics, and comparative model fits (AIC values). There is no “right answer” for this analysis—make an informed decision based on the data and understanding that you have.
 
-In 6-8 sentences, narrate your decision-making.
-Justify your inclusion of certain variables, investigation of any collinearity of variables, and model diagnostics. Did you choose to log-transform any data? Did you have concerns after exploring any of the model diagnostics? If so, how did that change your model selection? Please be sure to include information that helped you determine whether multi-collinearity, heteroscedasticity, or poor model fit was a concern.
+```{r}
+library(here)
+library(tidyverse)
+library(gridExtra)
+library(grid)
 
+NC_Census <- read.csv(here("./Assignments/week8/NC_Census.csv"))
+NC_Recreation_Acreage <- read.csv(("./Assignments/week8/NC_Recreation_Acreage.csv"))
+```
+
+Cleaning up data:
+```{r}
+#renaming columns in NC_Census so they match up with NC_Recreation_Acreage county names
+NC_Census <- NC_Census %>% rename(`Chatham County` = Chatham.County..North.Carolina,
+                     `Wake County` = Wake.County..North.Carolina,
+                     `Alamance County` = Alamance.County..North.Carolina,
+                     `Orange County` = Orange.County..North.Carolina,
+                     `Durham County` = Durham.County..North.Carolina,
+                     `Caswell County` = Caswell.County..North.Carolina,
+                     `Person County` = Person.County..North.Carolina,
+                     `Granville County` = Granville.County..North.Carolina,
+                     `Franklin County` = Franklin.County..North.Carolina,
+                     `Vance County` = Vance.County..North.Carolina,
+                     `Lee County` = Lee.County..North.Carolina,
+                     `Moore County` = Moore.County..North.Carolina,
+                     `Randolph County` = Randolph.County..North.Carolina,
+                     `Guilford County` = Guilford.County..North.Carolina,
+                     `Rockingham County` = Rockingham.County..North.Carolina,
+                     `Halifax County` = Halifax.County..North.Carolina,
+                     `Nash County` = Nash.County..North.Carolina,
+                     `Wilson County` = Wilson.County..North.Carolina,
+                     `Johnston County` = Johnston.County..North.Carolina,
+                     `Harnett County` = Harnett.County..North.Carolina)
+
+#filter to only include the aforementioned items from census data
+NC_Census_filtered <- NC_Census %>% slice(c(2, 10, 11, 12, 13, 14, 19, 25, 31, 48))
+
+#filter the NC_Recreation_Acreage data to only have the counties in the 
+#NC_Census data file (remove counties that don't appear in NC_Census)
+NC_Recreation_Acreage_filtered <- NC_Recreation_Acreage %>% 
+  filter(Area.Name %in% colnames(NC_Census_filtered)) 
+
+NC_Recreation_Acreage_Sum <- NC_Recreation_Acreage_filtered %>% 
+  group_by(Area.Name) %>% 
+  summarize(Total_Recreation_Acreage = sum(Value)) %>% 
+  ungroup()
+
+#transpose NC_Recreation_Acreage_Sum to make it easier to merge with NC_Census_filtered 
+NC_Recreation_Acreage_Sum <- NC_Recreation_Acreage_Sum %>%
+  pivot_wider(names_from = Area.Name, values_from = Total_Recreation_Acreage)
+
+#merge the two data frames together
+NC_data_merged <- merge(NC_Census_filtered, NC_Recreation_Acreage_Sum, all = TRUE)
+
+NC_data_merged$Fact[8] <- "Total Recreation Acreage"
+
+#Cleaning up merged data frame
+NC_data_merged <- NC_data_merged %>%
+  filter(Fact != "Total Recreation Acreage") %>%
+  bind_rows(filter(NC_data_merged, Fact == "Total Recreation Acreage")) %>% 
+  subset(select = -ncol(NC_data_merged))
+
+#transpose so rows are counties and columns are the facts
+NC_data_transposed <- NC_data_merged %>%
+  pivot_longer(cols = -Fact, names_to = "County", values_to = "Value") %>%
+  pivot_wider(names_from = Fact, values_from = Value) 
+
+#removing dollar signs and turning into num values
+NC_data_cleaned <- NC_data_transposed %>%
+  mutate(across(-1, ~ str_remove_all(., "[$,()%]"))) %>% 
+  mutate(across(-1, as.numeric)) 
+```
+
+#(2) 
+Using the workflow presented in lab, perform a multiple linear regression to investigate potential predictors of total outdoor recreation acreage. You must decide which of the initial 10 variables make sense to include based on your conceptual understanding of relevant factors, model outputs, diagnostics, and comparative model fits (AIC values). There is no “right answer” for this analysis—make an informed decision based on the data and understanding that you have.
+
+##Step 1 - Defining the research question
+
+Research question: What are the potential census predictors of total outdoor recreation acreage?
+
+##Step 2 - Examining the data and possible correlations
+
+```{r}
+# Create and examine initial scatterplots of data.
+#Median value of owner-occupied housing units, 2019-2023
+scatter_1 <- ggplot(NC_data_cleaned, aes(x = `Median value of owner-occupied housing units, 2019-2023`, 
+                                         y = `Total Recreation Acreage`)) +  
+    geom_point() +  
+    theme_bw()
+scatter_1
+
+#Median households income (in 2023 dollars), 2019-2023
+scatter_2 <- ggplot(NC_data_cleaned, aes(x = `Median households income (in 2023 dollars), 2019-2023`, 
+                                         y = `Total Recreation Acreage`)) +  
+    geom_point() +  
+    theme_bw()
+scatter_2
+
+#Black alone, percent (a)
+scatter_3 <- ggplot(NC_data_cleaned, aes(x = `Black alone, percent (a)`, 
+                                         y = `Total Recreation Acreage`)) +  
+    geom_point() +  
+    theme_bw()
+scatter_3
+
+#Hispanic or Latino, percent (b)
+scatter_4 <- ggplot(NC_data_cleaned, aes(x = `Hispanic or Latino, percent (b)`, 
+                                         y = `Total Recreation Acreage`)) +  
+    geom_point() +  
+    theme_bw()
+scatter_4
+
+#Persons under 18 years, percent
+scatter_5 <- ggplot(NC_data_cleaned, aes(x = `Persons under 18 years, percent`, 
+                                         y = `Total Recreation Acreage`)) +  
+    geom_point() +  
+    theme_bw()
+scatter_5
+
+#Persons per household, 2019-2023
+scatter_6 <- ggplot(NC_data_cleaned, aes(x = `Persons per household, 2019-2023`, 
+                                         y = `Total Recreation Acreage`)) +  
+    geom_point() +  
+    theme_bw()
+scatter_6
+
+#Persons 65 years and over, percent
+scatter_7 <- ggplot(NC_data_cleaned, aes(x = `Persons 65 years and over, percent`, 
+                                         y = `Total Recreation Acreage`)) +  
+    geom_point() +  
+    theme_bw()
+scatter_7
+
+#Female persons, percent
+scatter_8 <- ggplot(NC_data_cleaned, aes(x = `Female persons, percent`, 
+                                         y = `Total Recreation Acreage`)) +  
+    geom_point() +  
+    theme_bw()
+scatter_8
+
+#Population estimates, July 1, 2023, (V2023)
+scatter_9 <- ggplot(NC_data_cleaned, aes(x = `Population estimates, July 1, 2023, (V2023)`, 
+                                         y = `Total Recreation Acreage`)) +  
+    geom_point() +  
+    theme_bw()
+scatter_9
+
+#White alone, percent
+scatter_10 <- ggplot(NC_data_cleaned, aes(x = `White alone, percent`, 
+                                         y = `Total Recreation Acreage`)) +  
+    geom_point() +  
+    theme_bw()
+scatter_10
+
+#combine scatter plots
+grid.arrange(scatter_1, scatter_2, scatter_3, scatter_4, scatter_5,
+             scatter_6, scatter_7, scatter_8, scatter_9, scatter_10,
+             ncol = 2, nrow = 5)
+```
+
+Investigating multi-collinearity:
+```{r}
+library(corrplot)
+
+# Compute correlation matrix for numeric columns
+cor_matrix <- cor(NC_data_cleaned %>% select(where(is.numeric)), use = "pairwise.complete.obs")
+
+# Create a numbered key
+variable_names <- colnames(cor_matrix)  # Extract variable names
+numbered_names <- paste0(1:length(variable_names))  # Create numbers
+
+# Rename matrix columns and rows with numbers
+colnames(cor_matrix) <- numbered_names
+rownames(cor_matrix) <- numbered_names
+
+# Generate the correlation plot with numbers
+corrplot(cor_matrix, method = "color", type = "upper",
+         col = colorRampPalette(c("blue", "white", "red"))(200),  
+         tl.col = "black", tl.cex = 1)  # Adjust text size
+
+key <- data.frame(
+  Variable = variable_names
+)
+
+key <- head(key, -1)
+
+key 
+```
+
+If there are pairs with high correlations, only one of the variables can be kept in a linear model. Pairs that appear to have higher correlations based on the  colors on the correlation plot (follow key for combinations):
+X1 and X2
+X1 and X9
+X2 and X9
+X4 and X6
+X5 and X6
+
+Based on these findings, I will fit 6 different models using the following combinations that avoids multi-collinearity:
+X1, X3, X4, X5, X7, X8, X10
+X3, X4, X5, X7, X8, X9, X10
+X1, X3, X6, X7, X8, X10
+X2, X3, X4, X5, X7, X8, X10
+X2, X3, X6, X7, X8, X10
+X3, X6, X7, X8, X9, X10
+
+##Step 3 - Fit regression model(s)
+
+```{r}
+model_1 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Median value of owner-occupied housing units, 2019-2023` + `Black alone, percent (a)` + `Hispanic or Latino, percent (b)` + `Persons under 18 years, percent` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `White alone, percent`)
+
+model_2 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Black alone, percent (a)` + `Hispanic or Latino, percent (b)` + `Persons under 18 years, percent` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `Population estimates, July 1, 2023, (V2023)` + `White alone, percent`)
+
+model_3 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Median value of owner-occupied housing units, 2019-2023` + `Black alone, percent (a)` + `Persons per household, 2019-2023` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `White alone, percent`)
+
+model_4 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Median households income (in 2023 dollars), 2019-2023` + `Black alone, percent (a)` + `Hispanic or Latino, percent (b)` + `Persons under 18 years, percent` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `White alone, percent`)
+
+model_5 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Median households income (in 2023 dollars), 2019-2023` + `Black alone, percent (a)` + `Persons per household, 2019-2023` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `White alone, percent`)
+
+model_6 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Black alone, percent (a)` + `Persons per household, 2019-2023` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `Population estimates, July 1, 2023, (V2023)` + `White alone, percent`)
+```
+
+##Step 4 - Evaluate model diagnostics
+
+```{r}
+model_1_AIC <- AIC(model_1)
+model_2_AIC <- AIC(model_2)
+model_3_AIC <- AIC(model_3)
+model_4_AIC <- AIC(model_4)
+model_5_AIC <- AIC(model_5)
+model_6_AIC <- AIC(model_6)
+```
+
+model 6 does the best, and this includes the following: `Black alone, percent (a)` + `Persons per household, 2019-2023` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `Population estimates, July 1, 2023, (V2023)` + `White alone, percent`
+
+#(3) 
+In 6-8 sentences, narrate your decision-making. Justify your inclusion of certain variables, investigation of any collinearity of variables, and model diagnostics. Did you choose to log-transform any data? Did you have concerns after exploring any of the model diagnostics? If so, how did that change your model selection? Please be sure to include information that helped you determine whether multi-collinearity, heteroscedasticity, or poor model fit was a concern.
+
+Tomorrow:
+- log transform some of the data
+- determining heteroscedasticity?
+^I think both of these will come from looking at the scatter plots, so redo that part adjust dependent vars
+
+#(4) 
 In 3-4 sentences, describe the final model output as you would for a final report.
 
 Works Cited:
