@@ -75,7 +75,7 @@ windows() # quartz() if on a Mac
 
 par(mfrow = c(2,2))  
 
-plot(linearmodel)
+plot(maple.lm1)
 ```
 
 There don’t appear to be any visible outliers, particularly ones that surpass the Cook’s distance. However, in the very first plot, there does appear to be evidence of heteroscedasticity, with variance increasing as you progress along the x-axis. So, let’s employ a data transformation to see if we can help with this issue.

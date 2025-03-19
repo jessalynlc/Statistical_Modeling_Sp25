@@ -2,6 +2,7 @@
 title: "Week 8 Assignment"
 author: "Jessalyn Chuang"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 geometry: margin=2.54cm
@@ -176,19 +177,20 @@ scatter_10 <- ggplot(NC_data_cleaned, aes(x = `White alone, percent`,
     geom_point() +  
     theme_bw()
 scatter_10
-
-#combine scatter plots
-grid.arrange(scatter_1, scatter_2, scatter_3, scatter_4, scatter_5,
-             scatter_6, scatter_7, scatter_8, scatter_9, scatter_10,
-             ncol = 2, nrow = 5)
 ```
 
 Investigating multi-collinearity:
 ```{r}
 library(corrplot)
 
-# Compute correlation matrix for numeric columns
-cor_matrix <- cor(NC_data_cleaned %>% select(where(is.numeric)), use = "pairwise.complete.obs")
+numeric_data <- NC_data_cleaned %>% select(where(is.numeric))
+#Learned about pairwise.complete.obs from: 
+#https://corrr.tidymodels.org/reference/correlate.html
+cor_matrix <- cor(numeric_data, use = "pairwise.complete.obs")
+
+# Compute p-values, cor.mtest() found at the following page: 
+#https://www.rdocumentation.org/packages/corrplot/versions/0.95/topics/cor.mtest
+p_matrix <- cor.mtest(numeric_data)$p
 
 # Create a numbered key
 variable_names <- colnames(cor_matrix)  # Extract variable names
@@ -198,10 +200,13 @@ numbered_names <- paste0(1:length(variable_names))  # Create numbers
 colnames(cor_matrix) <- numbered_names
 rownames(cor_matrix) <- numbered_names
 
-# Generate the correlation plot with numbers
+#Learned corrplot in ENV 872, documentation at this page: 
+#https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
 corrplot(cor_matrix, method = "color", type = "upper",
          col = colorRampPalette(c("blue", "white", "red"))(200),  
-         tl.col = "black", tl.cex = 1)  # Adjust text size
+         tl.col = "black", tl.cex = 1,
+         addCoef.col = "black", number.cex = 0.8, 
+         p.mat = p_matrix, sig.level = 0.05, insig = "blank") #
 
 key <- data.frame(
   Variable = variable_names
@@ -209,38 +214,81 @@ key <- data.frame(
 
 key <- head(key, -1)
 
+#for identifying what I mean by X1 - X10
 key 
 ```
 
-If there are pairs with high correlations, only one of the variables can be kept in a linear model. Pairs that appear to have higher correlations based on the  colors on the correlation plot (follow key for combinations):
-X1 and X2
-X1 and X9
-X2 and X9
-X4 and X6
-X5 and X6
+If there are pairs with correlations that are greater than 0.6 with p value < 0.05, only one of the variables can be kept in a linear model. Pairs that appear to have higher correlations based on the  colors on the correlation plot (follow key for combinations):  
+X1 and X2  
+X2 and X3  
+X3 and X10  
+X5 and X6  
 
-Based on these findings, I will fit 6 different models using the following combinations that avoids multi-collinearity:
-X1, X3, X4, X5, X7, X8, X10
-X3, X4, X5, X7, X8, X9, X10
-X1, X3, X6, X7, X8, X10
-X2, X3, X4, X5, X7, X8, X10
-X2, X3, X6, X7, X8, X10
-X3, X6, X7, X8, X9, X10
+Based on these findings, I will fit 6 different models using the following combinations that avoids multi-collinearity:  
+X1, X3, X4, X5, X7, X8, X9  
+X1, X4, X5, X7, X8, X9, X10  
+X1, X3, X4, X6, X7, X8, X9  
+X1, X4, X6, X7, X8, X9, X10  
+X2, X4, X5, X7, X8, X9, X10  
+X2, X4, X6, X7, X8, X9, X10  
+
 
 ##Step 3 - Fit regression model(s)
 
 ```{r}
-model_1 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Median value of owner-occupied housing units, 2019-2023` + `Black alone, percent (a)` + `Hispanic or Latino, percent (b)` + `Persons under 18 years, percent` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `White alone, percent`)
+model_1 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ 
+                `Median value of owner-occupied housing units, 2019-2023` + 
+                `Black alone, percent (a)` + 
+                `Hispanic or Latino, percent (b)` + 
+                `Persons under 18 years, percent` + 
+                `Persons 65 years and over, percent` + 
+                `Female persons, percent` + 
+                `Population estimates, July 1, 2023, (V2023)`)
 
-model_2 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Black alone, percent (a)` + `Hispanic or Latino, percent (b)` + `Persons under 18 years, percent` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `Population estimates, July 1, 2023, (V2023)` + `White alone, percent`)
+model_2 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ 
+                `Median value of owner-occupied housing units, 2019-2023` + 
+                `Hispanic or Latino, percent (b)` + 
+                `Persons under 18 years, percent` + 
+                `Persons 65 years and over, percent` + 
+                `Female persons, percent` + 
+                `Population estimates, July 1, 2023, (V2023)` + 
+                `White alone, percent`)
 
-model_3 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Median value of owner-occupied housing units, 2019-2023` + `Black alone, percent (a)` + `Persons per household, 2019-2023` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `White alone, percent`)
+model_3 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ 
+                `Median value of owner-occupied housing units, 2019-2023` + 
+                `Black alone, percent (a)` + 
+                `Hispanic or Latino, percent (b)` + 
+                `Persons per household, 2019-2023` + 
+                `Persons 65 years and over, percent` + 
+                `Female persons, percent` + 
+                `Population estimates, July 1, 2023, (V2023)`)
 
-model_4 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Median households income (in 2023 dollars), 2019-2023` + `Black alone, percent (a)` + `Hispanic or Latino, percent (b)` + `Persons under 18 years, percent` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `White alone, percent`)
+model_4 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ 
+                `Median value of owner-occupied housing units, 2019-2023` + 
+                `Hispanic or Latino, percent (b)` + 
+                `Persons per household, 2019-2023` + 
+                `Persons 65 years and over, percent` + 
+                `Female persons, percent` + 
+                `Population estimates, July 1, 2023, (V2023)` + 
+                `White alone, percent`)
 
-model_5 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Median households income (in 2023 dollars), 2019-2023` + `Black alone, percent (a)` + `Persons per household, 2019-2023` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `White alone, percent`)
+model_5 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ 
+                `Median households income (in 2023 dollars), 2019-2023` + 
+                `Hispanic or Latino, percent (b)` + 
+                `Persons under 18 years, percent` + 
+                `Persons 65 years and over, percent` + 
+                `Female persons, percent` + 
+                `Population estimates, July 1, 2023, (V2023)` + 
+                `White alone, percent`)
 
-model_6 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ `Black alone, percent (a)` + `Persons per household, 2019-2023` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `Population estimates, July 1, 2023, (V2023)` + `White alone, percent`)
+model_6 <- lm(data = NC_data_cleaned, `Total Recreation Acreage` ~ 
+                `Median households income (in 2023 dollars), 2019-2023` + 
+                `Hispanic or Latino, percent (b)` + 
+                `Persons per household, 2019-2023` + 
+                `Persons 65 years and over, percent` + 
+                `Female persons, percent` + 
+                `Population estimates, July 1, 2023, (V2023)` + 
+                `White alone, percent`)
 ```
 
 ##Step 4 - Evaluate model diagnostics
@@ -254,18 +302,73 @@ model_5_AIC <- AIC(model_5)
 model_6_AIC <- AIC(model_6)
 ```
 
-model 6 does the best, and this includes the following: `Black alone, percent (a)` + `Persons per household, 2019-2023` + `Persons 65 years and over, percent` + `Persons 65 years and over, percent` + `Population estimates, July 1, 2023, (V2023)` + `White alone, percent`
+model 4 does the best as it received the lowest AIC of 437.42, and this includes the following: `Median value of owner-occupied housing units, 2019-2023` + `Hispanic or Latino, percent (b)` + `Persons per household, 2019-2023` + `Persons 65 years and over, percent` + `Female persons, percent` + `Population estimates, July 1, 2023, (V2023)` + `White alone, percent`
+
+Next is to examine the results and the residuals of this model:
+```{r}
+# Examine the results and the residuals.
+summary(model_4)
+plot(model_4)
+```
+
+It looks like only Persons 65 years and over, percent and Population estimates, July 1, 2023, (V2023) were the significant predictors, so I am revising the model to only include these two predictors. Additionally, based on plotting the residuals, it looks like row 1 could be an outlier, so I am also going to remove this and rerun the linear model.
+
+```{r}
+NC_data_cleaned_updated <- NC_data_cleaned[-1, ] 
+model_revised <- lm(data = NC_data_cleaned_updated, 
+`Total Recreation Acreage` ~ `Persons 65 years and over, percent` + 
+  `Population estimates, July 1, 2023, (V2023)`)
+model_revised_AIC <- AIC(model_revised)
+```
+
+```{r}
+# Examine the results and the residuals.
+summary(model_revised)
+plot(model_revised)
+```
+
+Now it looks like Population estimates, July 1, 2023, (V2023) is the only significant indicator.
+
+```{r}
+model_revised_2 <- lm(data = NC_data_cleaned_updated, 
+    `Total Recreation Acreage` ~ `Population estimates, July 1, 2023, (V2023)`)
+model_revised_2_AIC <- AIC(model_revised_2)
+summary(model_revised_2)
+plot(model_revised_2)
+```
+
+It turns out, it appears that Population estimates, July 1, 2023, (V2023) is the only significant indicator for Total Recreation Acreage. Granted, there is some variance in the residuals, but I was originally weary of log-transforming data considering how I don't have many data points to begin with! It looks like the AIC has improved even further with this second revision.
+
+There is one more outlier to remove it seems like based on Cook's Distance on the Residuals vs Leverage chart. This point is removed and the model is revised again:
+
+```{r}
+NC_data_cleaned_updated_2 <- NC_data_cleaned_updated[-1, ] 
+model_revised_3 <- lm(data = NC_data_cleaned_updated_2, 
+    `Total Recreation Acreage` ~ `Population estimates, July 1, 2023, (V2023)`)
+model_revised_3_AIC <- AIC(model_revised_3)
+summary(model_revised_3)
+plot(model_revised_3)
+```
+
+Now it appears that not even Population estimates is a good predictor once the outlier is removed. Thus, I will be concluding that none of the variables are a good predictor of Total Recreation Acreage!
 
 #(3) 
 In 6-8 sentences, narrate your decision-making. Justify your inclusion of certain variables, investigation of any collinearity of variables, and model diagnostics. Did you choose to log-transform any data? Did you have concerns after exploring any of the model diagnostics? If so, how did that change your model selection? Please be sure to include information that helped you determine whether multi-collinearity, heteroscedasticity, or poor model fit was a concern.
 
-Tomorrow:
-- log transform some of the data
-- determining heteroscedasticity?
-^I think both of these will come from looking at the scatter plots, so redo that part adjust dependent vars
+When looking at the scatter plots of each independent variable, the total recreation acreage as a function of each variable did not see a wide range. Additionally, there are so few data points for each, that I decided to not log-transform any data. From a visual inspection, it does not look like heteroscedasticity is a major issue because there looks to generally be a relatively even spread of data points across different independent variables. Overall, the values for each didn’t show a very obvious correlation, though interestingly in the scatter plot representing Total Recreation Acreage vs Population estimates, July 1, 2023, (V2023), most of that data was clustered to the left, indicating that most of the population estimates were smaller, but they encompassed a wide range of acreages. This would be the main variable that would make me concerned as there might be some heteroscedasticity present that might make log-transforming worth it. However, again there are so few data points, that I avoided log transforming this. From there, I investigated multi-collinearity, and this was done by creating a correlation matrix showing every pairwise correlation for those with p-values less than 0.05. Any pairs with correlations greater than 0.6 that were also significant were noted to only keep one of the independent variables in the pair for a potential linear model. I found 4 pairs that were shown to have multi-collinearity:
+
+* Median value of owner-occupied housing units, 2019-2023 and Median households income (in 2023 dollars), 2019-2023
+* Median households income (in 2023 dollars), 2019-2023 and Black alone, percent (a)
+* Black alone, percent (a) and White alone, percent
+* Persons under 18 years, percent and Persons per household, 2019-2023
+
+With this in mind, I came up with 6 different models that did not pair two of these variables together. I then evaluated the models I created by using AIC values to describe them relative to one another and stating that the best model is the one with the lowest AIC value. Additionally, I also interpreted the actual model results and studied the residuals to further decide whether I should remove any variables I initially included (keeping only those that are considered significant in the model) or if I need to clean the data at all (i.e. log-transform or remove outliers).
 
 #(4) 
+
 In 3-4 sentences, describe the final model output as you would for a final report.
+
+A multiple linear regression analysis was conducted to examine whether demographic factors predict total recreation acreage across 20 North Carolina counties. Initial models included multiple predictors, and outliers were identified and removed based on diagnostic plots of residuals to improve model fit. After testing multiple model specifications and addressing potential data concerns, the final model included only Population Estimates, July 1, 2023, (V2023) as the predictor but was not statistically significant (F(1,16) = 0.5503, p = 0.469). The predictor, Population Estimates, was not significant (B = 0.01364, p = 0.469), and the model had a very low R^2 value (0.033); given these results, it's likely that other factors not analyzed may contribute to differences in recreation acreage in North Carolina.
 
 Works Cited:
 Juice, S. and T. Fahey (2019). Health and mycorrhizal colonization response of sugar maple (Acer saccharum) seedlings to calcium addition in Watershed 1 at the Hubbard Brook Experimental Forest ver 3. Environmental Data Initiative. https://doi.org/10.6073/pasta/0ade53ede9a916a36962799b2407097e
