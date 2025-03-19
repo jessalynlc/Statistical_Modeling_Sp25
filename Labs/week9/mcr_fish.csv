@@ -1,0 +1,599 @@
+Transect_ID,Time_Start,Habitat,Depth_m,Swath,Species,Count,Total_Length_cm,Microhabitat,Notes
+2,14:20,Fringing Reef,1,5,Acanthurus nigrofuscus,7,10,NA,NA
+2,14:20,Fringing Reef,1,5,Acanthurus nigrofuscus,1,12,NA,NA
+2,14:20,Fringing Reef,1,5,Acanthurus triostegus,5,12,NA,NA
+2,14:20,Fringing Reef,1,5,Acanthurus triostegus,1,8,NA,NA
+2,14:20,Fringing Reef,1,5,Acanthurus triostegus,9,9,NA,NA
+2,14:20,Fringing Reef,1,5,Acanthurus triostegus,1,10,NA,NA
+2,14:20,Fringing Reef,1,5,Acanthurus triostegus,5,8,NA,NA
+2,14:20,Fringing Reef,1,5,Acanthurus triostegus,7,7,NA,NA
+2,14:20,Fringing Reef,1,5,Ctenochaetus striatus,2,12,NA,NA
+2,14:20,Fringing Reef,1,5,Ctenochaetus striatus,6,15,NA,NA
+2,14:20,Fringing Reef,1,5,Scarus psittacus,16,8,NA,NA
+2,14:20,Fringing Reef,1,5,Scarus psittacus,3,15,NA,NA
+2,14:20,Fringing Reef,1,5,Scarus psittacus,10,6,NA,NA
+2,14:20,Fringing Reef,1,5,Scarus psittacus,10,19,NA,NA
+2,14:20,Fringing Reef,1,5,Scarus psittacus,5,7,NA,NA
+2,14:20,Fringing Reef,1,5,Scarus psittacus,1,12,NA,NA
+2,14:20,Fringing Reef,1,5,Chlorurus sordidus,1,15,NA,NA
+2,14:20,Fringing Reef,1,5,Siganus spinus,1,15,NA,NA
+1,13:35,Fringing Reef,0.75,5,Acanthurus nigrofuscus,1,7,NA,NA
+1,13:35,Fringing Reef,0.75,5,Acanthurus nigrofuscus,1,8,NA,NA
+1,13:35,Fringing Reef,0.75,5,Acanthurus nigrofuscus,1,10,NA,NA
+1,13:35,Fringing Reef,0.75,5,Acanthurus triostegus,3,9,NA,NA
+1,13:35,Fringing Reef,0.75,5,Acanthurus triostegus,5,7,NA,NA
+1,13:35,Fringing Reef,0.75,5,Acanthurus triostegus,6,6,NA,NA
+1,13:35,Fringing Reef,0.75,5,Acanthurus triostegus,5,9,NA,NA
+1,13:35,Fringing Reef,0.75,5,Ctenochaetus striatus,1,10,NA,NA
+1,13:35,Fringing Reef,0.75,5,Naso lituratus,1,18,NA,NA
+1,13:35,Fringing Reef,0.75,5,Scarus psittacus,10,12,NA,NA
+1,13:35,Fringing Reef,0.75,5,Scarus psittacus,3,11,NA,NA
+1,13:35,Fringing Reef,0.75,5,Scarus psittacus,1,7,NA,NA
+1,13:35,Fringing Reef,0.75,5,Scarus psittacus,18,8,NA,NA
+1,13:35,Fringing Reef,0.75,5,Scarus psittacus,8,6,NA,NA
+1,13:35,Fringing Reef,0.75,5,Scarus psittacus,17,9,NA,NA
+1,13:35,Fringing Reef,0.75,5,Scarus psittacus,5,5,NA,NA
+1,13:35,Fringing Reef,0.75,5,Chlorurus sordidus,5,12,NA,NA
+1,13:35,Fringing Reef,0.75,5,Chlorurus sordidus,1,14,NA,NA
+1,13:35,Fringing Reef,0.75,5,Chlorurus sordidus,1,10,NA,NA
+1,13:35,Fringing Reef,0.75,5,Chlorurus sordidus,3,15,NA,NA
+1,13:35,Fringing Reef,0.75,5,Chlorurus sordidus,5,7,NA,NA
+1,13:35,Fringing Reef,0.75,5,Chlorurus sordidus,5,12,NA,NA
+1,13:35,Fringing Reef,0.75,5,Chlorurus sordidus,5,6,NA,NA
+1,13:35,Fringing Reef,0.75,5,Siganus spinus,4,12,NA,NA
+1,13:35,Fringing Reef,0.75,5,Siganus spinus,2,17,NA,NA
+3,15:00,Fringing Reef,3.5,5,Acanthurus triostegus,1,9,NA,NA
+3,15:00,Fringing Reef,3.5,5,Ctenochaetus striatus,5,16,NA,NA
+3,15:00,Fringing Reef,3.5,5,Ctenochaetus striatus,1,18,NA,NA
+3,15:00,Fringing Reef,3.5,5,Zebrasoma scopas,5,16,NA,NA
+3,15:00,Fringing Reef,3.5,5,Zebrasoma scopas,1,5,NA,NA
+3,15:00,Fringing Reef,3.5,5,Zebrasoma scopas,1,3,NA,NA
+3,15:00,Fringing Reef,3.5,5,Scarus psittacus,7,8,NA,NA
+3,15:00,Fringing Reef,3.5,5,Scarus psittacus,1,14,NA,NA
+3,15:00,Fringing Reef,3.5,5,Scarus psittacus,3,15,NA,NA
+3,15:00,Fringing Reef,3.5,5,Scarus psittacus,20,18,NA,NA
+3,15:00,Fringing Reef,3.5,5,Scarus psittacus,30,22,NA,NA
+3,15:00,Fringing Reef,3.5,5,Scarus psittacus,5,17,NA,NA
+3,15:00,Fringing Reef,3.5,5,Chlorurus sordidus,5,24,NA,NA
+3,15:00,Fringing Reef,3.5,5,Chlorurus sordidus,1,20,NA,NA
+3,15:00,Fringing Reef,3.5,5,Chlorurus sordidus,1,26,NA,NA
+3,15:00,Fringing Reef,3.5,5,Chlorurus sordidus,5,17,NA,NA
+3,15:00,Fringing Reef,3.5,5,Acanthurus olivaceus,1,11,NA,NA
+3,15:00,Fringing Reef,3.5,5,Acanthurus pyroferus,1,19,NA,NA
+4,10:15,Lagoon,1.5,5,No Fish,NA,NA,NA,NA
+5,10:28,Lagoon,1.5,5,Acanthurus nigrofuscus,4,12,NA,NA
+5,10:28,Lagoon,1.5,5,Acanthurus nigrofuscus,1,8,NA,NA
+5,10:28,Lagoon,1.5,5,Acanthurus triostegus,1,12,NA,NA
+5,10:28,Lagoon,1.5,5,Acanthurus triostegus,1,14,NA,NA
+5,10:28,Lagoon,1.5,5,Ctenochaetus striatus,8,16,NA,NA
+5,10:28,Lagoon,1.5,5,Ctenochaetus striatus,1,8,NA,NA
+5,10:28,Lagoon,1.5,5,Ctenochaetus striatus,10,16,NA,NA
+5,10:28,Lagoon,1.5,5,Ctenochaetus striatus,12,14,NA,NA
+5,10:28,Lagoon,1.5,5,Ctenochaetus striatus,12,16,NA,NA
+5,10:28,Lagoon,1.5,5,Naso lituratus,4,18,NA,NA
+5,10:28,Lagoon,1.5,5,Zebrasoma scopas,10,15,NA,NA
+5,10:28,Lagoon,1.5,5,Scarus psittacus,15,9,NA,NA
+5,10:28,Lagoon,1.5,5,Scarus psittacus,5,8,NA,NA
+5,10:28,Lagoon,1.5,5,Scarus psittacus,4,6,NA,NA
+5,10:28,Lagoon,1.5,5,Scarus psittacus,5,10,NA,NA
+5,10:28,Lagoon,1.5,5,Scarus psittacus,3,12,NA,NA
+5,10:28,Lagoon,1.5,5,Scarus psittacus,5,15,NA,NA
+5,10:28,Lagoon,1.5,5,Chlorurus sordidus,1,12,NA,NA
+5,10:28,Lagoon,1.5,5,Chlorurus sordidus,2,8,NA,NA
+5,10:28,Lagoon,1.5,5,Chlorurus sordidus,4,6,NA,NA
+5,10:28,Lagoon,1.5,5,Chlorurus sordidus,2,10,NA,NA
+5,10:28,Lagoon,1.5,5,Chlorurus sordidus,2,15,NA,NA
+5,10:28,Lagoon,1.5,5,Chlorurus sordidus,10,8,NA,NA
+5,10:28,Lagoon,1.5,5,Chlorurus sordidus,1,17,NA,NA
+5,10:28,Lagoon,1.5,5,Chlorurus sordidus,3,10,NA,NA
+5,10:28,Lagoon,1.5,5,Chlorurus sordidus,4,15,NA,NA
+5,10:28,Lagoon,1.5,5,Chlorurus sordidus,1,25,NA,NA
+5,10:28,Lagoon,1.5,5,Siganus spinus,8,15,NA,NA
+5,10:28,Lagoon,1.5,5,Siganus spinus,5,12,NA,NA
+6,11:42,Lagoon,1.5,5,Acanthurus nigrofuscus,2,12,NA,NA
+6,11:42,Lagoon,1.5,5,Acanthurus nigrofuscus,1,7,NA,NA
+6,11:42,Lagoon,1.5,5,Acanthurus nigrofuscus,33,14,NA,NA
+6,11:42,Lagoon,1.5,5,Acanthurus triostegus,4,13,NA,NA
+6,11:42,Lagoon,1.5,5,Acanthurus triostegus,3,15,NA,NA
+6,11:42,Lagoon,1.5,5,Ctenochaetus striatus,5,14,NA,NA
+6,11:42,Lagoon,1.5,5,Ctenochaetus striatus,10,16,NA,NA
+6,11:42,Lagoon,1.5,5,Ctenochaetus striatus,10,14,NA,NA
+6,11:42,Lagoon,1.5,5,Ctenochaetus striatus,8,15,NA,NA
+6,11:42,Lagoon,1.5,5,Naso lituratus,1,17,NA,NA
+6,11:42,Lagoon,1.5,5,Scarus psittacus,1,20,NA,NA
+6,11:42,Lagoon,1.5,5,Scarus psittacus,3,16,NA,NA
+6,11:42,Lagoon,1.5,5,Scarus psittacus,2,12,NA,NA
+6,11:42,Lagoon,1.5,5,Scarus psittacus,1,18,NA,NA
+6,11:42,Lagoon,1.5,5,Chlorurus sordidus,3,19,NA,NA
+6,11:42,Lagoon,1.5,5,Siganus spinus,5,15,NA,NA
+7,15:19,Lagoon,0.3,5,Acanthurus nigrofuscus,5,12,NA,NA
+7,15:19,Lagoon,0.3,5,Acanthurus triostegus,11,15,NA,NA
+7,15:19,Lagoon,0.3,5,Acanthurus triostegus,15,15,NA,NA
+7,15:19,Lagoon,0.3,5,Acanthurus triostegus,1,12,NA,NA
+7,15:19,Lagoon,0.3,5,Naso lituratus,4,15,NA,NA
+7,15:19,Lagoon,0.3,5,Scarus psittacus,2,18,NA,NA
+8,16:04,Lagoon,1,5,Acanthurus nigrofuscus,7,14,NA,NA
+8,16:04,Lagoon,1,5,Acanthurus nigrofuscus,16,12,NA,NA
+8,16:04,Lagoon,1,5,Ctenochaetus striatus,2,15,NA,NA
+8,16:04,Lagoon,1,5,Ctenochaetus striatus,15,13,NA,NA
+8,16:04,Lagoon,1,5,Ctenochaetus striatus,4,15,NA,NA
+8,16:04,Lagoon,1,5,Ctenochaetus striatus,5,13,NA,NA
+8,16:04,Lagoon,1,5,Zebrasoma scopas,1,16,NA,NA
+8,16:04,Lagoon,1,5,Scarus psittacus,3,20,NA,NA
+8,16:04,Lagoon,1,5,Scarus psittacus,2,10,NA,NA
+8,16:04,Lagoon,1,5,Scarus psittacus,1,8,NA,NA
+8,16:04,Lagoon,1,5,Scarus psittacus,1,15,NA,NA
+8,16:04,Lagoon,1,5,Scarus psittacus,2,12,NA,NA
+8,16:04,Lagoon,1,5,Scarus psittacus,3,10,NA,NA
+8,16:04,Lagoon,1,5,Chlorurus sordidus,1,8,NA,NA
+8,16:04,Lagoon,1,5,Chlorurus sordidus,1,12,NA,NA
+8,16:04,Lagoon,1,5,Chlorurus sordidus,1,8,NA,NA
+14,10:15,Fringing Reef,14,5,Ctenochaetus striatus,4,15,NA,NA
+14,10:15,Fringing Reef,14,5,Ctenochaetus striatus,2,17,NA,NA
+14,10:15,Fringing Reef,14,5,Ctenochaetus striatus,5,17,NA,NA
+14,10:15,Fringing Reef,14,5,Naso lituratus,3,16,NA,NA
+14,10:15,Fringing Reef,14,5,Zebrasoma scopas,8,12,NA,NA
+14,10:15,Fringing Reef,14,5,Zebrasoma scopas,10,15,NA,NA
+14,10:15,Fringing Reef,14,5,Scarus psittacus,2,20,NA,NA
+14,10:15,Fringing Reef,14,5,Scarus psittacus,3,16,NA,NA
+14,10:15,Fringing Reef,14,5,Scarus psittacus,1,22,NA,NA
+14,10:15,Fringing Reef,14,5,Scarus psittacus,2,24,NA,NA
+14,10:15,Fringing Reef,14,5,Acanthurus pyroferus,7,17,NA,NA
+14,10:15,Fringing Reef,14,5,Acanthurus nigricauda,15,17,NA,NA
+14,10:15,Fringing Reef,14,5,Chlorurus sordidus,12,18,NA,NA
+14,10:15,Fringing Reef,14,5,Chlorurus sordidus,8,18,NA,NA
+15,11:30,Fringing Reef,11,5,Acanthurus nigrofuscus,1,14,NA,NA
+15,11:30,Fringing Reef,11,5,Acanthurus nigrofuscus,2,8,NA,NA
+15,11:30,Fringing Reef,11,5,Ctenochaetus striatus,1,16,NA,NA
+15,11:30,Fringing Reef,11,5,Ctenochaetus striatus,2,15,NA,NA
+15,11:30,Fringing Reef,11,5,Ctenochaetus striatus,1,13,NA,NA
+15,11:30,Fringing Reef,11,5,Ctenochaetus striatus,1,12,NA,NA
+15,11:30,Fringing Reef,11,5,Ctenochaetus striatus,2,14,NA,NA
+15,11:30,Fringing Reef,11,5,Naso lituratus,1,16,NA,NA
+15,11:30,Fringing Reef,11,5,Zebrasoma scopas,2,10,NA,NA
+15,11:30,Fringing Reef,11,5,Zebrasoma scopas,1,15,NA,NA
+15,11:30,Fringing Reef,11,5,Zebrasoma scopas,2,8,NA,NA
+15,11:30,Fringing Reef,11,5,Zebrasoma scopas,1,10,NA,NA
+15,11:30,Fringing Reef,11,5,Scarus oviceps,1,12,NA,NA
+15,11:30,Fringing Reef,11,5,Scarus oviceps,2,16,NA,NA
+15,11:30,Fringing Reef,11,5,Scarus psittacus,2,20,NA,NA
+15,11:30,Fringing Reef,11,5,Chlorurus sordidus,4,17,NA,NA
+15,11:30,Fringing Reef,11,5,Chlorurus sordidus,3,12,NA,NA
+15,11:30,Fringing Reef,11,5,Chlorurus sordidus,2,22,NA,NA
+15,11:30,Fringing Reef,11,5,Chlorurus sordidus,3,8,NA,NA
+15,11:30,Fringing Reef,11,5,Chlorurus sordidus,2,20,NA,NA
+15,11:30,Fringing Reef,11,5,Acanthurus pyroferus,1,16,NA,NA
+15,11:30,Fringing Reef,11,5,Acanthurus nigricauda,1,18,NA,NA
+15,11:30,Fringing Reef,11,5,Acanthurus nigricauda,2,13,NA,NA
+15,11:30,Fringing Reef,11,5,Acanthurus nigricauda,5,15,NA,NA
+17,15:42,Lagoon,1.7,5,Acanthurus nigrofuscus,2,12,NA,NA
+17,15:42,Lagoon,1.7,5,Acanthurus nigrofuscus,2,8,NA,NA
+17,15:42,Lagoon,1.7,5,Acanthurus nigrofuscus,1,14,NA,NA
+17,15:42,Lagoon,1.7,5,Acanthurus nigrofuscus,3,12,NA,NA
+17,15:42,Lagoon,1.7,5,Acanthurus triostegus,3,14,NA,NA
+17,15:42,Lagoon,1.7,5,Ctenochaetus striatus,30,16,NA,NA
+17,15:42,Lagoon,1.7,5,Zebrasoma scopas,1,15,NA,NA
+17,15:42,Lagoon,1.7,5,Zebrasoma scopas,5,16,NA,NA
+17,15:42,Lagoon,1.7,5,Scarus psittacus,4,17,NA,NA
+17,15:42,Lagoon,1.7,5,Scarus psittacus,22,15,NA,NA
+17,15:42,Lagoon,1.7,5,Chlorurus sordidus,2,16,NA,NA
+17,15:42,Lagoon,1.7,5,Chlorurus sordidus,1,18,NA,NA
+17,15:42,Lagoon,1.7,5,Chlorurus sordidus,5,17,NA,NA
+17,15:42,Lagoon,1.7,5,Scarus altipinnis,2,18,NA,NA
+16,14:52,Lagoon,1.7,5,Acanthurus nigrofuscus,33,12,NA,NA
+16,14:52,Lagoon,1.7,5,Acanthurus triostegus,1,5,NA,NA
+16,14:52,Lagoon,1.7,5,Ctenochaetus striatus,44,15,NA,NA
+16,14:52,Lagoon,1.7,5,Naso lituratus,5,18,NA,NA
+16,14:52,Lagoon,1.7,5,Zebrasoma scopas,8,15,NA,NA
+16,14:52,Lagoon,1.7,5,Scarus psittacus,5,18,NA,NA
+16,14:52,Lagoon,1.7,5,Scarus psittacus,5,16,NA,NA
+16,14:52,Lagoon,1.7,5,Scarus psittacus,1,15,NA,NA
+16,14:52,Lagoon,1.7,5,Scarus psittacus,3,18,NA,NA
+16,14:52,Lagoon,1.7,5,Scarus psittacus,25,16,NA,NA
+16,14:52,Lagoon,1.7,5,Chlorurus sordidus,4,16,NA,NA
+16,14:52,Lagoon,1.7,5,Chlorurus sordidus,10,18,NA,NA
+16,14:52,Lagoon,1.7,5,Siganus spinus,9,15,NA,NA
+16,14:52,Lagoon,1.7,5,Siganus argenteus,1,17,NA,NA
+9,09:43,Fringing Reef,1.4,5,Acanthurus nigrofuscus,7,10,NA,NA
+9,09:43,Fringing Reef,1.4,5,Acanthurus nigrofuscus,1,6,NA,NA
+9,09:43,Fringing Reef,1.4,5,Acanthurus nigrofuscus,20,8,NA,NA
+9,09:43,Fringing Reef,1.4,5,Acanthurus nigrofuscus,13,9,NA,NA
+9,09:43,Fringing Reef,1.4,5,Acanthurus nigrofuscus,5,6,NA,NA
+9,09:43,Fringing Reef,1.4,5,Ctenochaetus striatus,10,10,NA,NA
+9,09:43,Fringing Reef,1.4,5,Ctenochaetus striatus,2,7,NA,NA
+9,09:43,Fringing Reef,1.4,5,Ctenochaetus striatus,2,13,NA,NA
+9,09:43,Fringing Reef,1.4,5,Ctenochaetus striatus,1,12,NA,NA
+9,09:43,Fringing Reef,1.4,5,Ctenochaetus striatus,9,10,NA,NA
+9,09:43,Fringing Reef,1.4,5,Ctenochaetus striatus,8,9,NA,NA
+9,09:43,Fringing Reef,1.4,5,Naso lituratus,2,12,NA,NA
+9,09:43,Fringing Reef,1.4,5,Zebrasoma scopas,8,10,NA,NA
+9,09:43,Fringing Reef,1.4,5,Zebrasoma scopas,9,8,NA,NA
+9,09:43,Fringing Reef,1.4,5,Zebrasoma scopas,2,10,NA,NA
+9,09:43,Fringing Reef,1.4,5,Zebrasoma scopas,2,8,NA,NA
+9,09:43,Fringing Reef,1.4,5,Zebrasoma scopas,2,10,NA,NA
+9,09:43,Fringing Reef,1.4,5,Zebrasoma scopas,1,12,NA,NA
+9,09:43,Fringing Reef,1.4,5,Zebrasoma scopas,2,6,NA,NA
+9,09:43,Fringing Reef,1.4,5,Scarus oviceps,3,12,NA,NA
+9,09:43,Fringing Reef,1.4,5,Scarus oviceps,1,5,NA,NA
+9,09:43,Fringing Reef,1.4,5,Scarus oviceps,1,7,NA,NA
+9,09:43,Fringing Reef,1.4,5,Chlorurus sordidus,5,10,NA,NA
+9,09:43,Fringing Reef,1.4,5,Chlorurus sordidus,4,6,NA,NA
+9,09:43,Fringing Reef,1.4,5,Chlorurus sordidus,7,8,NA,NA
+9,09:43,Fringing Reef,1.4,5,Chlorurus sordidus,4,6,NA,NA
+9,09:43,Fringing Reef,1.4,5,Chlorurus sordidus,1,10,NA,NA
+9,09:43,Fringing Reef,1.4,5,Chlorurus microrhinos,1,7,NA,NA
+10,10:27,Fringing Reef,3.8,5,Acanthurus nigrofuscus,7,7,NA,NA
+10,10:27,Fringing Reef,3.8,5,Acanthurus nigrofuscus,2,12,NA,NA
+10,10:27,Fringing Reef,3.8,5,Ctenochaetus striatus,3,14,NA,NA
+10,10:27,Fringing Reef,3.8,5,Ctenochaetus striatus,1,10,NA,NA
+10,10:27,Fringing Reef,3.8,5,Ctenochaetus striatus,4,8,NA,NA
+10,10:27,Fringing Reef,3.8,5,Naso lituratus,2,10,NA,NA
+10,10:27,Fringing Reef,3.8,5,Naso lituratus,1,15,NA,NA
+10,10:27,Fringing Reef,3.8,5,Naso lituratus,1,12,NA,NA
+10,10:27,Fringing Reef,3.8,5,Zebrasoma scopas,10,12,NA,NA
+10,10:27,Fringing Reef,3.8,5,Zebrasoma scopas,5,7,NA,NA
+10,10:27,Fringing Reef,3.8,5,Scarus oviceps,1,14,NA,NA
+10,10:27,Fringing Reef,3.8,5,Scarus oviceps,8,12,NA,NA
+10,10:27,Fringing Reef,3.8,5,Scarus oviceps,1,15,NA,NA
+10,10:27,Fringing Reef,3.8,5,Scarus psittacus,2,9,NA,NA
+10,10:27,Fringing Reef,3.8,5,Scarus psittacus,2,7,NA,NA
+10,10:27,Fringing Reef,3.8,5,Chlorurus sordidus,1,6,NA,NA
+10,10:27,Fringing Reef,3.8,5,Chlorurus sordidus,2,10,NA,NA
+10,10:27,Fringing Reef,3.8,5,Chlorurus sordidus,3,7,NA,NA
+10,10:27,Fringing Reef,3.8,5,Chlorurus sordidus,1,15,NA,NA
+10,10:27,Fringing Reef,3.8,5,Chlorurus sordidus,4,12,NA,NA
+11,11:06,Fringing Reef,0.8,5,Acanthurus nigrofuscus,23,8,NA,NA
+11,11:06,Fringing Reef,0.8,5,Acanthurus nigrofuscus,20,9,NA,NA
+11,11:06,Fringing Reef,0.8,5,Acanthurus nigrofuscus,16,7,NA,NA
+11,11:06,Fringing Reef,0.8,5,Acanthurus nigrofuscus,5,6,NA,NA
+11,11:06,Fringing Reef,0.8,5,Ctenochaetus striatus,21,8,NA,NA
+11,11:06,Fringing Reef,0.8,5,Ctenochaetus striatus,14,10,NA,NA
+11,11:06,Fringing Reef,0.8,5,Ctenochaetus striatus,16,12,NA,NA
+11,11:06,Fringing Reef,0.8,5,Ctenochaetus striatus,6,15,NA,NA
+11,11:06,Fringing Reef,0.8,5,Naso lituratus,1,14,NA,NA
+11,11:06,Fringing Reef,0.8,5,Zebrasoma scopas,1,5,NA,NA
+11,11:06,Fringing Reef,0.8,5,Zebrasoma scopas,2,7,NA,NA
+11,11:06,Fringing Reef,0.8,5,Zebrasoma scopas,8,10,NA,NA
+11,11:06,Fringing Reef,0.8,5,Zebrasoma scopas,5,6,NA,NA
+11,11:06,Fringing Reef,0.8,5,Zebrasoma scopas,5,12,NA,NA
+11,11:06,Fringing Reef,0.8,5,Zebrasoma scopas,6,9,NA,NA
+11,11:06,Fringing Reef,0.8,5,Zebrasoma scopas,10,8,NA,NA
+11,11:06,Fringing Reef,0.8,5,Zebrasoma scopas,6,10,NA,NA
+11,11:06,Fringing Reef,0.8,5,Zebrasoma scopas,5,12,NA,NA
+11,11:06,Fringing Reef,0.8,5,Scarus oviceps,1,17,NA,NA
+11,11:06,Fringing Reef,0.8,5,Scarus oviceps,1,15,NA,NA
+11,11:06,Fringing Reef,0.8,5,Scarus oviceps,1,13,NA,NA
+11,11:06,Fringing Reef,0.8,5,Scarus psittacus,15,6,NA,NA
+11,11:06,Fringing Reef,0.8,5,Scarus psittacus,10,5,NA,NA
+11,11:06,Fringing Reef,0.8,5,Chlorurus sordidus,2,9,NA,NA
+11,11:06,Fringing Reef,0.8,5,Chlorurus sordidus,2,20,NA,NA
+11,11:06,Fringing Reef,0.8,5,Chlorurus sordidus,11,7,NA,NA
+11,11:06,Fringing Reef,0.8,5,Chlorurus sordidus,4,5,NA,NA
+11,11:06,Fringing Reef,0.8,5,Scarus altipinnis,2,7,NA,NA
+11,11:06,Fringing Reef,0.8,5,Siganus spinus,9,1,NA,NA
+11,11:06,Fringing Reef,0.8,5,Siganus spinus,5,8,NA,NA
+11,11:06,Fringing Reef,0.8,5,Siganus spinus,5,12,NA,NA
+12,14:42,Lagoon,2.2,5,Acanthurus nigrofuscus,1,9,NA,NA
+12,14:42,Lagoon,2.2,5,Acanthurus nigrofuscus,6,10,NA,NA
+12,14:42,Lagoon,2.2,5,Acanthurus nigrofuscus,3,12,NA,NA
+12,14:42,Lagoon,2.2,5,Acanthurus nigrofuscus,2,9,NA,NA
+12,14:42,Lagoon,2.2,5,Ctenochaetus striatus,5,15,NA,NA
+12,14:42,Lagoon,2.2,5,Ctenochaetus striatus,3,10,NA,NA
+12,14:42,Lagoon,2.2,5,Ctenochaetus striatus,12,15,NA,NA
+12,14:42,Lagoon,2.2,5,Ctenochaetus striatus,12,14,NA,NA
+12,14:42,Lagoon,2.2,5,Zebrasoma scopas,4,14,NA,NA
+12,14:42,Lagoon,2.2,5,Zebrasoma scopas,1,15,NA,NA
+12,14:42,Lagoon,2.2,5,Scarus psittacus,1,17,NA,NA
+12,14:42,Lagoon,2.2,5,Scarus psittacus,1,20,NA,NA
+12,14:42,Lagoon,2.2,5,Chlorurus sordidus,2,17,NA,NA
+12,14:42,Lagoon,2.2,5,Chlorurus sordidus,3,14,NA,NA
+12,14:42,Lagoon,2.2,5,Siganus spinus,1,14,NA,NA
+13,15:21,Lagoon,2.3,5,Acanthurus nigrofuscus,10,12,NA,NA
+13,15:21,Lagoon,2.3,5,Acanthurus nigrofuscus,1,10,NA,NA
+13,15:21,Lagoon,2.3,5,Acanthurus triostegus,1,15,NA,NA
+13,15:21,Lagoon,2.3,5,Ctenochaetus striatus,20,15,NA,NA
+13,15:21,Lagoon,2.3,5,Zebrasoma scopas,2,15,NA,NA
+13,15:21,Lagoon,2.3,5,Scarus psittacus,8,16,NA,NA
+13,15:21,Lagoon,2.3,5,Scarus psittacus,2,18,NA,NA
+13,15:21,Lagoon,2.3,5,Chlorurus sordidus,2,17,NA,NA
+13,15:21,Lagoon,2.3,5,Chlorurus sordidus,2,16,NA,NA
+13,15:21,Lagoon,2.3,5,Chlorurus sordidus,2,18,NA,NA
+13,15:21,Lagoon,2.3,5,Acanthurus nigricauda,2,18,NA,NA
+18,13:10,Forereef,3,5,Acanthurus triostegus,5,15,NA,NA
+18,13:10,Forereef,3,5,Acanthurus triostegus,2,17,NA,NA
+18,13:10,Forereef,3,5,Zebrasoma scopas,1,15,NA,NA
+18,13:10,Forereef,3,5,Chlorurus sordidus,4,18,NA,NA
+18,13:10,Forereef,3,5,Acanthurus nigroris,10,15,NA,NA
+19,14:00,Forereef,13,5,Ctenochaetus striatus,13,16,NA,NA
+19,14:00,Forereef,13,5,Ctenochaetus striatus,90,15,NA,NA
+19,14:00,Forereef,13,5,Ctenochaetus striatus,15,17,NA,NA
+19,14:00,Forereef,13,5,Naso lituratus,2,17,NA,NA
+19,14:00,Forereef,13,5,Naso lituratus,1,18,NA,NA
+19,14:00,Forereef,13,5,Naso lituratus,2,22,NA,NA
+19,14:00,Forereef,13,5,Zebrasoma scopas,3,14,NA,NA
+19,14:00,Forereef,13,5,Chlorurus sordidus,4,18,NA,NA
+19,14:00,Forereef,13,5,Chlorurus sordidus,3,22,NA,NA
+19,14:00,Forereef,13,5,Chlorurus sordidus,4,20,NA,NA
+19,14:00,Forereef,13,5,Acanthurus nigricans,34,17,NA,NA
+19,14:00,Forereef,13,5,Acanthurus nigricans,30,14,NA,NA
+19,14:00,Forereef,13,5,Scarus rubroviolaceus,1,17,NA,NA
+19,14:00,Forereef,13,5,Acanthurus pyroferus,1,15,NA,NA
+20,14:35,Forereef,10,5,Ctenochaetus striatus,140,15,NA,NA
+20,14:35,Forereef,10,5,Acanthurus nigricans,45,15,NA,NA
+20,14:35,Forereef,10,5,Acanthurus nigricauda,1,17,NA,NA
+20,14:35,Forereef,10,5,Chlorurus sordidus,1,24,NA,NA
+20,14:35,Forereef,10,5,Scarus frenatus,1,24,NA,unsure of ID
+20,14:35,Forereef,10,5,Acanthurus triostegus,2,16,NA,NA
+20,14:35,Forereef,10,5,Unknown Scaridae,1,17,NA,NA
+20,14:35,Forereef,10,5,Naso lituratus,4,22,NA,NA
+20,14:35,Forereef,10,5,Naso lituratus,2,16,NA,NA
+20,14:35,Forereef,10,5,Ctenochaetus striatus,1,10,NA,NA
+20,14:35,Forereef,10,5,Acanthurus nigrofuscus,3,12,NA,NA
+20,14:35,Forereef,10,5,Chlorurus sordidus,4,17,NA,NA
+20,14:35,Forereef,10,5,Chlorurus sordidus,2,22,NA,NA
+20,14:35,Forereef,10,5,Chlorurus sordidus,15,18,NA,NA
+20,14:35,Forereef,10,5,Naso lituratus,1,18,NA,NA
+20,14:35,Forereef,10,5,Zebrasoma scopas,4,17,NA,NA
+20,14:35,Forereef,10,5,Acanthurus nigrofuscus,10,12,NA,NA
+21,09:30,Forereef,11,5,Acanthurus nigrofuscus,20,12,NA,NA
+21,09:30,Forereef,11,5,Acanthurus nigrofuscus,30,10,NA,NA
+21,09:30,Forereef,11,5,Ctenochaetus striatus,35,15,NA,NA
+21,09:30,Forereef,11,5,Naso lituratus,4,17,NA,NA
+21,09:30,Forereef,11,5,Naso lituratus,3,20,NA,NA
+21,09:30,Forereef,11,5,Zebrasoma scopas,13,16,NA,NA
+21,09:30,Forereef,11,5,Scarus oviceps,1,22,NA,NA
+21,09:30,Forereef,11,5,Scarus oviceps,1,18,NA,NA
+21,09:30,Forereef,11,5,Scarus psittacus,15,18,NA,NA
+21,09:30,Forereef,11,5,Chlorurus sordidus,5,17,NA,NA
+21,09:30,Forereef,11,5,Chlorurus sordidus,6,20,NA,NA
+21,09:30,Forereef,11,5,Chlorurus sordidus,3,17,NA,NA
+21,09:30,Forereef,11,5,Chlorurus sordidus,45,15,NA,NA
+21,09:30,Forereef,11,5,Acanthurus nigricauda,7,20,NA,NA
+21,09:30,Forereef,11,5,Zebrasoma veliferum,2,17,NA,NA
+21,09:30,Forereef,11,5,Acanthurus olivaceus,5,18,NA,NA
+21,09:30,Forereef,11,5,Scarus rubroviolaceus,1,20,NA,NA
+22,10:45,Forereef,2.5,5,Acanthurus triostegus,65,15,NA,NA
+22,10:45,Forereef,2.5,5,Zebrasoma scopas,1,15,NA,NA
+22,10:45,Forereef,2.5,5,Scarus psittacus,1,30,NA,NA
+23,11:11,Forereef,15,5,Acanthurus nigrofuscus,35,12,NA,NA
+23,11:11,Forereef,15,5,Acanthurus nigrofuscus,15,8,NA,NA
+23,11:11,Forereef,15,5,Ctenochaetus striatus,115,15,NA,NA
+23,11:11,Forereef,15,5,Ctenochaetus striatus,90,14,NA,NA
+23,11:11,Forereef,15,5,Naso lituratus,6,20,NA,NA
+23,11:11,Forereef,15,5,Naso lituratus,6,15,NA,NA
+23,11:11,Forereef,15,5,Naso lituratus,4,20,NA,NA
+23,11:11,Forereef,15,5,Naso lituratus,4,15,NA,NA
+23,11:11,Forereef,15,5,Zebrasoma scopas,15,15,NA,NA
+23,11:11,Forereef,15,5,Scarus psittacus,12,15,NA,NA
+23,11:11,Forereef,15,5,Chlorurus sordidus,6,20,NA,NA
+23,11:11,Forereef,15,5,Chlorurus sordidus,6,15,NA,NA
+23,11:11,Forereef,15,5,Acanthurus pyroferus,4,15,NA,NA
+23,11:11,Forereef,15,5,Acanthurus nigricans,10,15,NA,NA
+24,14:31,Lagoon,2,5,Acanthurus nigrofuscus,19,12,NA,NA
+24,14:31,Lagoon,2,5,Ctenochaetus striatus,75,16,NA,NA
+24,14:31,Lagoon,2,5,Zebrasoma scopas,16,14,NA,NA
+24,14:31,Lagoon,2,5,Scarus psittacus,1,20,NA,NA
+24,14:31,Lagoon,2,5,Scarus psittacus,4,18,NA,NA
+24,14:31,Lagoon,2,5,Chlorurus sordidus,4,18,NA,NA
+25,14:59,Lagoon,3,5,Acanthurus nigrofuscus,8,14,NA,NA
+25,14:59,Lagoon,3,5,Acanthurus triostegus,1,15,NA,NA
+25,14:59,Lagoon,3,5,Ctenochaetus striatus,3,15,NA,NA
+25,14:59,Lagoon,3,5,Ctenochaetus striatus,19,16,NA,NA
+25,14:59,Lagoon,3,5,Scarus psittacus,7,15,NA,NA
+25,14:59,Lagoon,3,5,Scarus psittacus,1,20,NA,NA
+25,14:59,Lagoon,3,5,Chlorurus sordidus,1,17,NA,NA
+25,14:59,Lagoon,3,5,Acanthurus nigricauda,2,18,NA,NA
+26,13:37,Pass,7,5,Acanthurus nigrofuscus,3,10,NA,NA
+26,13:37,Pass,7,5,Ctenochaetus striatus,10,14,NA,NA
+26,13:37,Pass,7,5,Ctenochaetus striatus,5,16,NA,NA
+26,13:37,Pass,7,5,Zebrasoma scopas,12,15,NA,NA
+26,13:37,Pass,7,5,Zebrasoma scopas,1,7,NA,NA
+26,13:37,Pass,7,5,Zebrasoma scopas,8,12,NA,NA
+26,13:37,Pass,7,5,Zebrasoma scopas,9,16,NA,NA
+26,13:37,Pass,7,5,Chlorurus sordidus,7,16,NA,NA
+26,13:37,Pass,7,5,Chlorurus sordidus,1,20,NA,NA
+26,13:37,Pass,7,5,Chlorurus sordidus,5,30,NA,NA
+26,13:37,Pass,7,5,Chlorurus sordidus,2,25,NA,NA
+26,13:37,Pass,7,5,Chlorurus sordidus,7,18,NA,NA
+26,13:37,Pass,7,5,Acanthurus pyroferus,1,16,NA,NA
+27,14:05,Pass,3,5,Acanthurus nigrofuscus,10,10,NA,NA
+27,14:05,Pass,3,5,Ctenochaetus striatus,41,15,NA,NA
+27,14:05,Pass,3,5,Naso lituratus,3,18,NA,NA
+27,14:05,Pass,3,5,Zebrasoma scopas,48,15,NA,NA
+27,14:05,Pass,3,5,Zebrasoma scopas,13,10,NA,NA
+27,14:05,Pass,3,5,Acanthurus nigricans,1,15,NA,NA
+27,14:05,Pass,3,5,Acanthurus pyroferus,1,10,NA,NA
+27,14:05,Pass,3,5,Acanthurus pyroferus,2,15,NA,NA
+27,14:05,Pass,3,5,Chlorurus sordidus,4,8,NA,NA
+27,14:05,Pass,3,5,Chlorurus sordidus,4,22,NA,NA
+27,14:05,Pass,3,5,Chlorurus sordidus,1,12,NA,NA
+27,14:05,Pass,3,5,Chlorurus sordidus,2,18,NA,NA
+28,09:48,Pass,8,5,Ctenochaetus striatus,26,15,NA,NA
+28,09:48,Pass,8,5,Zebrasoma scopas,17,25,NA,NA
+28,09:48,Pass,8,5,Scarus psittacus,4,25,NA,NA
+28,09:48,Pass,8,5,Chlorurus sordidus,40,20,NA,NA
+28,09:48,Pass,8,5,Chlorurus sordidus,7,25,NA,NA
+28,09:48,Pass,8,5,Chlorurus sordidus,7,30,NA,NA
+28,09:48,Pass,8,5,Chlorurus sordidus,5,15,NA,NA
+28,09:48,Pass,8,5,Acanthurus nigricans,1,15,NA,NA
+28,09:48,Pass,8,5,Acanthurus pyroferus,5,15,NA,NA
+29,10:13,Pass,4,5,Ctenochaetus striatus,35,15,NA,NA
+29,10:13,Pass,4,5,Naso lituratus,1,18,NA,NA
+29,10:13,Pass,4,5,Zebrasoma scopas,35,15,NA,NA
+29,10:13,Pass,4,5,Scarus psittacus,70,20,NA,NA
+29,10:13,Pass,4,5,Chlorurus sordidus,295,20,NA,NA
+29,10:13,Pass,4,5,Chlorurus sordidus,10,25,NA,NA
+29,10:13,Pass,4,5,Chlorurus sordidus,10,30,NA,NA
+29,10:13,Pass,4,5,Acanthurus nigricans,6,15,NA,NA
+30,10:47,Pass,2.5,5,Acanthurus nigrofuscus,5,10,NA,NA
+30,10:47,Pass,2.5,5,Acanthurus nigrofuscus,20,13,NA,NA
+30,10:47,Pass,2.5,5,Ctenochaetus striatus,65,15,NA,NA
+30,10:47,Pass,2.5,5,Zebrasoma scopas,11,15,NA,NA
+30,10:47,Pass,2.5,5,Scarus psittacus,7,18,NA,NA
+30,10:47,Pass,2.5,5,Scarus psittacus,7,15,NA,NA
+30,10:47,Pass,2.5,5,Scarus psittacus,7,20,NA,NA
+30,10:47,Pass,2.5,5,Scarus psittacus,40,22,NA,NA
+30,10:47,Pass,2.5,5,Scarus psittacus,2,25,NA,NA
+30,10:47,Pass,2.5,5,Chlorurus sordidus,4,25,NA,NA
+30,10:47,Pass,2.5,5,Chlorurus sordidus,11,20,NA,NA
+30,10:47,Pass,2.5,5,Acanthurus nigricauda,7,20,NA,NA
+31,11:10,Pass,1.5,5,Acanthurus nigrofuscus,3,12,NA,NA
+31,11:10,Pass,1.5,5,Acanthurus nigrofuscus,3,10,NA,NA
+31,11:10,Pass,1.5,5,Acanthurus nigrofuscus,5,12,NA,NA
+31,11:10,Pass,1.5,5,Ctenochaetus striatus,110,15,NA,NA
+31,11:10,Pass,1.5,5,Zebrasoma scopas,40,15,NA,NA
+31,11:10,Pass,1.5,5,Zebrasoma scopas,10,12,NA,NA
+31,11:10,Pass,1.5,5,Scarus psittacus,13,15,NA,NA
+31,11:10,Pass,1.5,5,Scarus psittacus,64,20,NA,NA
+31,11:10,Pass,1.5,5,Scarus psittacus,2,25,NA,NA
+31,11:10,Pass,1.5,5,Chlorurus sordidus,16,20,NA,NA
+31,11:10,Pass,1.5,5,Chlorurus sordidus,1,12,NA,NA
+31,11:10,Pass,1.5,5,Chlorurus sordidus,16,15,NA,NA
+32,13:45,Pass,16,5,Acanthurus nigrofuscus,1,12,NA,NA
+32,13:45,Pass,16,5,Ctenochaetus striatus,2,18,NA,NA
+32,13:45,Pass,16,5,Ctenochaetus striatus,14,15,NA,NA
+32,13:45,Pass,16,5,Zebrasoma scopas,21,15,NA,NA
+32,13:45,Pass,16,5,Scarus psittacus,4,15,NA,NA
+32,13:45,Pass,16,5,Chlorurus sordidus,3,30,NA,NA
+32,13:45,Pass,16,5,Chlorurus sordidus,6,25,NA,NA
+32,13:45,Pass,16,5,Chlorurus sordidus,1,15,NA,NA
+32,13:45,Pass,16,5,Acanthurus pyroferus,4,20,NA,NA
+32,13:45,Pass,16,5,Acanthurus nigricans,1,12,NA,NA
+33,14:08,Pass,8,5,Acanthurus triostegus,1,12,NA,NA
+33,14:08,Pass,8,5,Ctenochaetus striatus,35,15,NA,NA
+33,14:08,Pass,8,5,Naso lituratus,1,20,NA,NA
+33,14:08,Pass,8,5,Naso lituratus,3,18,NA,NA
+33,14:08,Pass,8,5,Zebrasoma scopas,40,15,NA,NA
+33,14:08,Pass,8,5,Zebrasoma scopas,105,10,NA,NA
+33,14:08,Pass,8,5,Scarus psittacus,2,20,NA,NA
+33,14:08,Pass,8,5,Scarus psittacus,1,25,NA,NA
+33,14:08,Pass,8,5,Scarus psittacus,25,20,NA,NA
+33,14:08,Pass,8,5,Scarus psittacus,6,25,NA,NA
+33,14:08,Pass,8,5,Scarus psittacus,7,15,NA,NA
+33,14:08,Pass,8,5,Chlorurus sordidus,2,12,NA,NA
+33,14:08,Pass,8,5,Acanthurus nigricans,1,15,NA,NA
+33,14:08,Pass,8,5,Acanthurus pyroferus,1,15,NA,NA
+34,10:20,Pass,5,5,Ctenochaetus striatus,72,15,NA,NA
+34,10:20,Pass,5,5,Ctenochaetus striatus,5,18,NA,NA
+34,10:20,Pass,5,5,Naso lituratus,1,18,NA,NA
+34,10:20,Pass,5,5,Zebrasoma scopas,20,15,NA,NA
+34,10:20,Pass,5,5,Zebrasoma scopas,5,12,NA,NA
+34,10:20,Pass,5,5,Scarus oviceps,5,18,NA,NA
+34,10:20,Pass,5,5,Scarus oviceps,1,24,NA,NA
+34,10:20,Pass,5,5,Scarus psittacus,1,25,NA,NA
+34,10:20,Pass,5,5,Scarus psittacus,5,20,NA,NA
+34,10:20,Pass,5,5,Scarus psittacus,75,15,NA,NA
+34,10:20,Pass,5,5,Chlorurus sordidus,17,20,NA,NA
+34,10:20,Pass,5,5,Chlorurus sordidus,3,25,NA,NA
+34,10:20,Pass,5,5,Chlorurus sordidus,35,20,NA,NA
+34,10:20,Pass,5,5,Chlorurus sordidus,50,15,NA,NA
+34,10:20,Pass,5,5,Chlorurus sordidus,5,12,NA,NA
+34,10:20,Pass,5,5,Chlorurus sordidus,10,18,NA,NA
+34,10:20,Pass,5,5,Acanthurus pyroferus,2,15,NA,NA
+34,10:20,Pass,5,5,Scarus globiceps,2,22,NA,NA
+34,10:20,Pass,5,5,Scarus niger,1,30,NA,NA
+34,10:20,Pass,5,5,Acanthurus nigricans,1,17,NA,NA
+34,10:20,Pass,5,5,Scarus rubroviolaceus,1,25,NA,NA
+3,15:00,Fringing Reef,3.5,1,Chlorurus sordidus,3,3.5,Porites rus,Picking on Halimeda and turf on partially dead Porites rus colony
+3,15:00,Fringing Reef,3.5,1,Chlorurus sordidus,2,2.5,Porites rus,Picking on Halimeda and turf on partially dead Porites rus colony
+1,13:35,Fringing Reef,0.75,1,No Fish,NA,NA,NA,NA
+2,14:20,Fringing Reef,1,1,No Fish,NA,NA,NA,NA
+4,10:15,Lagoon,1.5,1,No Fish,NA,NA,NA,NA
+5,10:28,Lagoon,1.5,1,Chlorurus sordidus,2,2.5,Bare/CCA/Turf,NA
+5,10:28,Lagoon,1.5,1,Chlorurus sordidus,1,3,Bare/CCA/Turf,NA
+5,10:28,Lagoon,1.5,1,Scarus psittacus,5,3.5,Porites rus,NA
+5,10:28,Lagoon,1.5,1,Scarus psittacus,5,4,Porites rus,NA
+5,10:28,Lagoon,1.5,1,Chlorurus sordidus,1,2,Porites rus,NA
+5,10:28,Lagoon,1.5,1,Chlorurus sordidus,1,2.5,Porites rus,NA
+6,11:42,Lagoon,1.5,1,Chlorurus sordidus,3,1.5,Halimeda,NA
+6,11:42,Lagoon,1.5,1,Chlorurus sordidus,1,2,Halimeda,NA
+6,11:42,Lagoon,1.5,1,Chlorurus sordidus,4,1.5,Halimeda,NA
+6,11:42,Lagoon,1.5,1,Chlorurus sordidus,1,1.5,Bare/CCA/Turf,NA
+7,15:19,Lagoon,0.3,1,Acanthurus triostegus,5,2.5,Rubble,NA
+7,15:19,Lagoon,0.3,1,Acanthurus triostegus,5,3.5,Rubble,NA
+7,15:19,Lagoon,0.3,1,Unknown Scaridae,1,2,Rubble,NA
+8,16:04,Lagoon,1,1,Scarus altipinnis,3,1.5,Bare/CCA/Turf,Close to Halimeda
+8,16:04,Lagoon,1,1,Scarus altipinnis,1,2,Bare/CCA/Turf,Close to Halimeda
+14,10:15,Fringing Reef,14,1,Chlorurus sordidus,1,2.5,Porites rus,NA
+14,10:15,Fringing Reef,14,1,Ctenochaetus binotatus,1,6,Porites rus,NA
+15,11:30,Fringing Reef,11,1,Acanthurus nigrofuscus,2,6,Porites rus,NA
+15,11:30,Fringing Reef,11,1,Acanthurus nigrofuscus,1,5,Porites rus,NA
+15,11:30,Fringing Reef,11,1,Acanthurus nigrofuscus,1,4,Porites rus,NA
+15,11:30,Fringing Reef,11,1,Zebrasoma scopas,1,5,Porites rus,NA
+17,15:42,Lagoon,1.7,1,Acanthurus triostegus,1,2.5,Rubble,NA
+17,15:42,Lagoon,1.7,1,Scarus altipinnis,1,3,Rubble,NA
+17,15:42,Lagoon,1.7,1,Scarus altipinnis,1,3,Porites  ,with turf
+17,15:42,Lagoon,1.7,1,Scarus altipinnis,1,5,NA,NA
+16,14:52,Lagoon,1.7,1,Ctenochaetus striatus,1,3.5,Rubble,NA
+9,09:43,Fringing Reef,1.4,1,Acanthurus nigrofuscus,1,5,NA,NA
+9,09:43,Fringing Reef,1.4,1,Zebrasoma scopas,2,3,Porites rus,NA
+9,09:43,Fringing Reef,1.4,1,Zebrasoma scopas,1,4,Porites rus,NA
+9,09:43,Fringing Reef,1.4,1,Zebrasoma scopas,3,3.5,Porites rus,NA
+9,09:43,Fringing Reef,1.4,1,Zebrasoma scopas,1,5,Porites rus,NA
+9,09:43,Fringing Reef,1.4,1,Chlorurus sordidus,2,2,Porites rus,Porites rus with turbinaria
+9,09:43,Fringing Reef,1.4,1,Chlorurus sordidus,2,3,Porites rus,Porites rus with turbinaria
+9,09:43,Fringing Reef,1.4,1,Chlorurus sordidus,2,3.5,Porites rus,Porites rus with turbinaria
+9,09:43,Fringing Reef,1.4,1,Ctenochaetus binotatus,1,3,Porites rus,NA
+10,10:27,Fringing Reef,3.8,1,Acanthurus nigrofuscus,1,4,Porites rus,NA
+10,10:27,Fringing Reef,3.8,1,Zebrasoma scopas,4,3,Porites rus,NA
+10,10:27,Fringing Reef,3.8,1,Zebrasoma scopas,2,4,Porites rus,NA
+10,10:27,Fringing Reef,3.8,1,Zebrasoma scopas,1,2.5,Porites rus,NA
+10,10:27,Fringing Reef,3.8,1,Zebrasoma scopas,1,3.5,Porites rus,NA
+11,11:06,Fringing Reef,0.8,1,Acanthurus triostegus,1,3,NA,NA
+11,11:06,Fringing Reef,0.8,1,Chlorurus sordidus,7,3,Porites rus,NA
+11,11:06,Fringing Reef,0.8,1,Chlorurus sordidus,1,2,Porites rus,NA
+12,14:42,Lagoon,2.2,1,Chlorurus sordidus,1,3,Bare/CCA/Turf,NA
+13,15:21,Lagoon,2.3,1,Acanthurus triostegus,1,2.5,NA,NA
+13,15:21,Lagoon,2.3,1,Acanthurus pyroferus,4,3,Rubble,NA
+18,13:10,Forereef,3,1,No Fish,NA,NA,NA,NA
+19,NA,Forereef,13,1,Acanthurus pyroferus,2,5,Bare/CCA/Turf,NA
+19,NA,Forereef,13,1,Acanthurus pyroferus,1,3.5,Bare/CCA/Turf,NA
+19,NA,Forereef,13,1,Ctenochaetus flavicauda,1,7,Bare/CCA/Turf,NA
+20,NA,Forereef,10,1,Ctenochaetus flavicauda,1,4.5,Rubble,NA
+21,NA,Forereef,11,1,No Fish,NA,NA,NA,NA
+22,10:45,Forereef,2.5,1,Acanthurus lineatus,1,3,Bare/CCA/Turf,NA
+23,11:11,Forereef,15,1,Acanthurus nigrofuscus,2,5,Bare/CCA/Turf,NA
+24,14:31,Lagoon,2,1,No Fish,NA,NA,NA,NA
+25,14:59,Lagoon,3,1,No Fish,NA,NA,NA,NA
+26,13:37,Pass,7,1,Acanthurus nigrofuscus,2,6,Porites rus,NA
+26,13:37,Pass,7,1,Zebrasoma scopas,4,3.5,Porites rus,NA
+26,13:37,Pass,7,1,Zebrasoma scopas,1,5,Porites rus,NA
+26,13:37,Pass,7,1,Zebrasoma scopas,3,3,Porites rus,NA
+26,13:37,Pass,7,1,Zebrasoma scopas,3,4,Porites rus,NA
+26,13:37,Pass,7,1,Zebrasoma scopas,2,3.5,Porites rus,NA
+26,13:37,Pass,7,1,Zebrasoma scopas,1,3.5,Rubble,NA
+26,13:37,Pass,7,1,Chlorurus sordidus,1,3.5,Porites rus,NA
+26,13:37,Pass,7,1,Chlorurus sordidus,1,6,Bare/CCA/Turf,near Porites rus
+26,13:37,Pass,7,1,Chlorurus sordidus,1,6,Porites rus,NA
+26,13:37,Pass,7,1,Ctenochaetus binotatus,1,4,Bare/CCA/Turf,NA
+26,13:37,Pass,7,1,Ctenochaetus binotatus,1,3.5,Rubble,NA
+26,13:37,Pass,7,1,Ctenochaetus binotatus,1,3.5,Porites rus,NA
+27,14:05,Pass,3,1,Acanthurus nigrofuscus,5,7,Porites rus,NA
+27,14:05,Pass,3,1,Acanthurus nigrofuscus,1,5,Porites rus,NA
+27,14:05,Pass,3,1,Acanthurus nigrofuscus,2,6,NA,NA
+27,14:05,Pass,3,1,Acanthurus nigrofuscus,1,5,Porites rus,NA
+27,14:05,Pass,3,1,Acanthurus nigrofuscus,1,7,NA,NA
+27,14:05,Pass,3,1,Acanthurus nigrofuscus,3,5,Porites rus,NA
+27,14:05,Pass,3,1,Zebrasoma scopas,2,3,Porites rus,NA
+27,14:05,Pass,3,1,Zebrasoma scopas,3,4,Porites rus,NA
+27,14:05,Pass,3,1,Zebrasoma scopas,3,5,Porites rus,NA
+27,14:05,Pass,3,1,Zebrasoma scopas,2,3,Porites rus,NA
+27,14:05,Pass,3,1,Chlorurus sordidus,1,3.5,Rubble,NA
+27,14:05,Pass,3,1,Chlorurus sordidus,1,3,Rubble,NA
+27,14:05,Pass,3,1,Chlorurus sordidus,1,5,Rubble,NA
+27,14:05,Pass,3,1,Ctenochaetus binotatus,2,5.5,Bare/CCA/Turf,NA
+27,14:05,Pass,3,1,Ctenochaetus binotatus,1,3.5,Bare/CCA/Turf,NA
+27,14:05,Pass,3,1,Chlorurus microrhinos,1,6,Rubble,NA
+28,09:48,Pass,8,1,Ctenochaetus binotatus,1,5,Bare/CCA/Turf,NA
+28,09:48,Pass,8,1,Ctenochaetus binotatus,1,4,Bare/CCA/Turf,NA
+29,10:13,Pass,4,1,Ctenochaetus binotatus,1,4,Bare/CCA/Turf,NA
+29,10:13,Pass,4,1,Zebrasoma scopas,1,4.5,Bare/CCA/Turf,NA
+30,10:47,Pass,2.5,1,No Fish,NA,NA,NA,NA
+31,11:10,Pass,1.5,1,No Fish,NA,NA,NA,NA
+32,13:45,Pass,16,1,No Fish,NA,NA,NA,NA
+33,14:08,Pass,8,1,Zebrasoma scopas,1,2.5,Porites rus,NA
+33,14:08,Pass,8,1,Zebrasoma scopas,1,3.5,Porites rus,NA
+33,14:08,Pass,8,1,Zebrasoma scopas,1,3,Porites rus,NA
+33,14:08,Pass,8,1,Chlorurus sordidus,1,3,Porites rus,NA
+33,14:08,Pass,8,1,Scarus niger,1,2.5,Porites rus,NA
+34,10:20,Pass,5,1,Ctenochaetus binotatus,1,5,Rubble,NA
