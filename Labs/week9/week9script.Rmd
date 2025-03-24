@@ -1,0 +1,182 @@
+```{r}
+install.packages("naniar", dependencies = TRUE)
+install.packages("DHARMa")
+install.packages("gtsummary")
+
+library(here)
+library(tidyverse)
+library(naniar)
+library(DHARMa)
+library(gtsummary)
+library(broom)
+
+sharkriver <- read_csv("fce_sharkriver.csv")
+coralfish <- read_csv("mcr_fish.csv")
+```
+
+#Logistic Regression
+```{r}
+sharkriver2 <- sharkriver %>% 
+  replace_with_na_all(condition = ~.x == -9999) %>% 
+  filter(DO < 30)
+```
+
+##Step 1 - Define your research question.
+
+Do water temperature, salinity, and season significantly predict hypoxic conditions?
+
+Defining hypoxia with cut-off of 4 mg/L DO
+```{r}
+sharkriver2 <- sharkriver2 %>% 
+  mutate(hypoxia = case_when(DO <= 4 ~ "YES",
+                             DO > 4 ~ "NO")) %>% #create hypoxia column
+  mutate(season = case_when(DayofYear >= 59 & DayofYear < 151 ~ "Spring",
+                            DayofYear >= 151 & DayofYear < 243 ~ "Summer",
+                            DayofYear >= 243 & DayofYear < 334 ~ "Fall",
+                            TRUE ~ "Winter")) #creates seasonal column
+```
+
+##Step 2 - Examine your data and possible correlations.
+```{r}
+#Raw counts
+bar_hypoxia <- ggplot(sharkriver2, aes(x = hypoxia)) +  
+    geom_bar() +  
+    theme_bw()
+bar_hypoxia
+
+hist_WaterTemp <- ggplot(sharkriver2, aes(x = WaterTemp)) +  
+    geom_histogram() +  
+    theme_bw()
+hist_WaterTemp
+
+hist_Salinity <- ggplot(sharkriver2, aes(x = Salinity)) +  
+    geom_histogram() +  
+    theme_bw()
+hist_Salinity
+
+bar_season <- ggplot(sharkriver2, aes(x = season)) +  
+    geom_bar() +  
+    theme_bw()
+bar_season
+
+#Relationships
+scatter_WaterTemp <- ggplot(sharkriver2, aes(x = WaterTemp, 
+                                         y = hypoxia)) +  
+    geom_point() +  
+    theme_bw()
+scatter_WaterTemp
+
+scatter_Salinity <- ggplot(sharkriver2, aes(x = Salinity, 
+                                         y = hypoxia)) +  
+    geom_point() +  
+    theme_bw()
+scatter_Salinity
+
+scatter_season <- ggplot(sharkriver2, aes(x = season, 
+                                         y = hypoxia)) +  
+    geom_point() +  
+    theme_bw()
+scatter_season
+```
+
+I sense that salinity and season are not going to be major drivers of hypoxia (hypoxia is found in both seasons and salinity is pretty spread for both). It seems like lower water temps might lead to lower likelihood of hypoxia (more no hypoxia situations have lower water temps).
+
+data transformations because of right skewed data:
+```{r}
+sharkriver2$log_WaterTemp <- log(sharkriver2$WaterTemp)
+#sharkriver2$log_Salinity <- log1p(sharkriver2$Salinity)
+```
+
+##Step 3 - Fit regression model
+```{r}
+sharkriver2$hypoxia <- factor(sharkriver2$hypoxia, levels = c("NO", "YES"))
+
+sharkriver2$season <- factor(sharkriver2$season, levels = c("Winter", "Spring", "Summer", "Fall"))
+
+hypox_mod <- glm(hypoxia ~ log_WaterTemp + Salinity + season, data = sharkriver2, family = "binomial")
+```
+
+##Step 4 - Evaluate model diagnostics
+```{r}
+summary(hypox_mod)
+simulateResiduals(hypox_mod) %>% plot() 
+```
+
+It appears to be well-specified. Here’s what each test and plot suggests:
+
+Left Plot: QQ Plot of Residuals
+The black points represent simulated residuals from your model.
+The red line represents the expected uniform distribution.
+The Kolmogorov-Smirnov (KS) test checks whether residuals deviate significantly from the expected distribution:
+p = 0.68484 → No significant deviation (n.s. means "not significant").
+Dispersion test:
+p = 0.944 → No overdispersion detected.
+Outlier test:
+p = 0.24106 → No extreme outliers.
+✅ Conclusion: The residuals follow the expected uniform distribution, suggesting that your model's predictions align well with the observed data.
+
+Right Plot: Residuals vs. Predicted Values
+The black circles represent residuals vs. model predictions.
+The red line is a smoothed trend line.
+Ideally, residuals should be uniformly distributed around 0.5, without systematic patterns.
+✅ Interpretation:
+
+Your residuals are evenly spread around 0.5, meaning no clear trend or structure.
+The red trend line is relatively flat, which indicates that the model doesn’t exhibit strong bias.
+There is no clear heteroscedasticity (unequal variance).
+Final Assessment
+Your model passes all key diagnostic tests: ✔️ No significant deviations from expected residual distribution (good model fit).
+✔️ No overdispersion (variance is well accounted for).
+✔️ No clear patterns in residuals vs. predictions (no major model misspecification).
+
+Your model is likely well-calibrated, and you don’t need major adjustments. 
+
+##Step 5 - Interpret the model and communicate the results.
+
+The results of a logistic regression are actually reporting the log-odds, meaning the coefficients can be interpreted as the expected change in log-odds for a 1 unit increase in continuous predictor variables or as compared to the reference level (ie "Winter") for categorical predictor variables.
+
+Remember when thinking about odds, we are reporting the ratio of probability of success (p) to the probability of failure (p-1).
+```{r}
+#Simulate temperature data
+temp_vector <- rep(seq(from = 0, to = 40), 4)
+
+#Keep salinity constant.
+#Often people will use the mean or median of a continuous value
+sal_vector <- rep(mean(sharkriver2$Salinity, na.rm = TRUE), 164)
+
+#Simulate seasonal data
+season_vector <- c(rep("Winter", 41),
+                  rep("Spring", 41),
+                  rep("Summer", 41),
+                  rep("Fall", 41))
+
+#Join with continuous data
+data_pred <- data.frame(temp_vector, season_vector, sal_vector)
+colnames(data_pred) <-  c("log_WaterTemp", "season", "Salinity")
+
+#Use the original model to predict outcomes
+prediction <- predict(hypox_mod, newdata = data_pred,
+                      type = "response",
+                      se.fit = TRUE)
+
+#pull out predictions
+data_fig <- data.frame(data_pred, prediction$fit, prediction$se.fit)
+
+colnames(data_fig) <- c("log_WaterTemp", "season", "Salinity", "probability", "se")
+
+#Graph the porbabilities of hypoixa
+ggplot(data_fig, aes(x = log_WaterTemp,
+                     y = probability)) +
+  geom_line(aes(color = season)) +
+  geom_ribbon(aes(ymin = probability - se,
+                  ymax = probability + se,
+                  fill = season), alpha = 0.3) + 
+  labs(x = "Temperature (degrees C)", y = "Probability of Hypoxia",
+       color = "Season", fill = "Season") +
+  theme_bw()
+```
+
+
+
+
+
