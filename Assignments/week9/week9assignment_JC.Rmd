@@ -1,0 +1,314 @@
+---
+title: "Week 9 Assignment"
+author: "Jessalyn Chuang"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+geometry: margin=2.54cm
+---
+
+#(1) Logistic Regression
+Download the dataset jrn_lizard.csv from Canvas. This dataset contains data on lizards
+captured using pitfall traps by researchers at the Jornada Basin Long Term Ecological Research
+site in southern New Mexico. For this portion of the assignment, you must build a logistic
+regression model to investigate the following research question:
+
+Do snout-to-vent length (SV_length), sex (sex), and vegetation zone (zone) at time of capture
+significantly predict if a lizard tail is recorded as whole (tail = W)?
+
+Before performing this regression, filter the dataset only for side-blotched lizards (Uta stans-
+buriana or spp = UTST). Also, for context, the four possible vegetation zones are black grama grassland (zone = G), creosotebush shrubland (zone = C), mesquite duneland (zone = M), and tarbush shrubland (zone = T).
+
+Using the workflow in today’s lab as a guide, work through the steps of performing a logistic
+regression using these data, including exploratory data visualizations. You should report the
+results of your final model in text form (1-2 sentences) as well as provide 2 predictive figures
+showing the change in probability of a lizard tail being whole as lizard length increases, with
+one including lines colored by sex and another including lines colored by vegetation zone.
+
+```{r}
+#install.packages("naniar", dependencies = TRUE)
+#install.packages("DHARMa")
+#install.packages("gtsummary")
+
+library(here)
+library(tidyverse)
+library(naniar)
+library(DHARMa)
+library(gtsummary)
+library(broom)
+
+lizard_data <- read_csv("./Assignments/week9/jrn_lizard.csv")
+utst_lizards <- filter(lizard_data, spp == "UTST")
+utst_lizards_clean <- na.omit(utst_lizards)
+```
+
+##Visualizing Data
+```{r}
+hist_SV_length <- ggplot(utst_lizards_clean, aes(x = SV_length)) +  
+    geom_histogram() +  
+    theme_bw()
+hist_SV_length
+
+bar_sex <- ggplot(utst_lizards_clean, aes(x = sex)) +  
+    geom_bar() +  
+    theme_bw()
+bar_sex
+
+bar_zone <- ggplot(utst_lizards_clean, aes(x = zone)) +  
+    geom_bar() +  
+    theme_bw()
+bar_zone
+
+bar_tail <- ggplot(utst_lizards_clean, aes(x = tail)) +  
+    geom_bar() +  
+    theme_bw()
+bar_tail
+```
+
+Observations from distributions: 
+1)SV_length: concentrated between 25 and 55, some potential outliers (values above 70 and below 15).
+2) Sex: three major categories with F being most common
+3) Zone: Zone M (mesquite duneland) has the highest count
+4) Tail: There are much more lizards recorded with a Whole tail. There is a strong class imbalance here.
+
+Relationships between predictors (SV_length, Sex, Zone) and the outcome variable (Tail)
+```{r}
+boxplot_1 <- ggplot(utst_lizards_clean, aes(x = SV_length, y = tail)) +  
+    geom_boxplot() +  
+    theme_bw()
+boxplot_1
+
+scatter_2 <- ggplot(utst_lizards_clean, aes(x = sex, y = tail)) +  
+    geom_point() +  
+    theme_bw()
+scatter_2
+
+scatter_3 <- ggplot(utst_lizards_clean, aes(x = zone, y = tail)) +  
+    geom_point() +  
+    theme_bw()
+scatter_3
+```
+The boxplot showing the relationship between SV_length and tail tells us that lizards with both tail classifications cover a similar range of snout to vent length, though their interquartile ranges are slightly different. There are also some indications of outlier values in the data. The scatter plots between sex and tail as well as zone and tail indicate that lizards with a whole tail are found across sexes and vegetation zones.
+
+##Fitting regression model
+```{r}
+#Set tail type column to be a factor with a reference level of B
+utst_lizards_clean$tail <- factor(utst_lizards_clean$tail, levels = c("B", "W"))
+utst_lizards_clean$sex <- factor(utst_lizards_clean$sex, levels = c("F", "J", "M"))
+utst_lizards_clean$zone <- factor(utst_lizards_clean$zone, levels = c("C", "G", "M", "T"))
+
+tail_type_mod <- glm(tail ~ SV_length + sex + zone, data = utst_lizards_clean,
+                     family = "binomial")
+```
+
+##Evaluating model diagnostics
+```{r}
+summary(tail_type_mod)
+
+simulateResiduals(tail_type_mod) %>% plot()
+```
+
+The residual diagnostics indicate a good fit of the logistic regression model. The QQ plot on the left shows that the observed residuals closely follow the expected uniform distribution, with no significant deviation (KS test: p = 0.255). The residual vs. predicted plot on the right shows that residuals are evenly scattered without clear patterns or trends, suggesting no major issues with heteroscedasticity. Overall, the residuals appear to follow what we should expect.
+
+##Intepreting model and communicating results
+
+The results of a logistic regression suggest that the log-odds of a lizard having a whole tail (vs. B tail) significantly decrease with greater Snout-to-Vent length (B = -0.041, p < 0.001). Compared to individuals from reference vegetation zone C, lizards from zone G had significantly lower log-odds of having a whole tail (β = -0.509, p = 0.014). There were no significant differences in the log-odds of white tail presence by sex relative to sex of F or in vegetation zones M and T relative to zone C.
+
+#2 Predictive Figures
+showing the change in probability of a lizard tail being whole as lizard length increases, with
+one including lines colored by sex and another including lines colored by vegetation zone
+```{r}
+SV_length_vector <- rep(seq(from = 0, to = 90), 3)
+
+# Keep zone constant at "C"
+zone_vector <- rep("C", length(SV_length_vector)) 
+  
+# Simulate sex data repeating "F", "J", "M"
+sex_vector <- rep(c("F", "J", "M"), each = length(seq(from = 0, to = 90)))
+  
+data_pred <-  data.frame(SV_length_vector, zone_vector, sex_vector)
+colnames(data_pred) <- c("SV_length", "zone", "sex")
+
+prediction <- predict(tail_type_mod,
+                      newdata = data_pred,
+                      type = "response",
+                      se.fit = TRUE)
+
+data_fig <-  data.frame(data_pred,
+                        prediction$fit,
+                        prediction$se.fit)
+
+# Rename columns.
+colnames(data_fig) <- c("SV_length","zone", "sex", "probability", "se")
+
+#Graph probability of a lizard tail being whole as lizard length increases, with
+#lines colored by sex 
+ggplot(data_fig, aes(x = SV_length, y = probability)) +
+  geom_line(aes(color = sex)) +
+  geom_ribbon(aes(ymin = probability - se,
+                  ymax = probability + se,
+                  fill = sex), alpha = 0.3) +
+  labs(x = "SV Length",
+       y = "Probability of Having Whole Tail",
+       color = "Sex",
+       fill = "Sex") +
+  theme_bw()
+
+SV_length_vector <- rep(seq(from = 0, to = 90), 4)
+
+# Simulate zone data repeating "C", "G", "M", "T"
+zone_vector <- rep(c("C", "G", "M", "T"), each = length(seq(from = 0, to = 90))) 
+  
+# Keep sex constant at "F"
+sex_vector <- rep("F", length(SV_length_vector))
+  
+data_pred <-  data.frame(SV_length_vector, zone_vector, sex_vector)
+colnames(data_pred) <- c("SV_length", "zone", "sex")
+
+prediction <- predict(tail_type_mod,
+                      newdata = data_pred,
+                      type = "response",
+                      se.fit = TRUE)
+
+data_fig <-  data.frame(data_pred,
+                        prediction$fit,
+                        prediction$se.fit)
+
+# Rename columns.
+colnames(data_fig) <- c("SV_length","zone", "sex", "probability", "se")
+
+#Graph probability of a lizard tail being whole as lizard length increases, with
+#lines colored by zone 
+ggplot(data_fig, aes(x = SV_length, y = probability)) +
+  geom_line(aes(color = zone)) +
+  geom_ribbon(aes(ymin = probability - se,
+                  ymax = probability + se,
+                  fill = zone), alpha = 0.3) +
+  labs(x = "SV Length",
+       y = "Probability of Having Whole Tail",
+       color = "Zone",
+       fill = "Zone") +
+  theme_bw()
+```
+
+#(2) Poisson Regression
+
+Download the dataset jrn_lizard_npp.csv from Canvas. This dataset combines counts of lizards
+captured using pitfall traps with percent cover of diﬀerent plant species at the Jornada Basin
+Long Term Ecological Research. For this portion of the assignment, you must build a poisson
+regression model to investigate the following research question:
+
+Do season (season) and plant species percent cover (BOER, LATR, PRGL, SCBR) significantly predict
+lizard counts (lizard_count)?
+
+These data have already been filtered only for side-blotched lizards (Uta stansburiana). Sea-
+sons include fall (F), winter (W), and summer (S). In addition, the four plant species whose
+percent covers are reported here are creosote bush (Larrea tridentata or LATR), burrograss
+(Scleropogon brevifolius or SCBR), honey mesquite (Prosopis glandulosa or PRGL), and black
+grama grass (Bouteloua eriopoda or BOER). Note, “percent cover” refers to the percent of a
+given quadrat, or sampling area, that a species occupies.
+
+Using the workflow in today’s lab as a guide, work through the steps of performing a poisson
+regression using these data, including exploratory data visualizations. You are not expected
+to include all four plant species in your model structure but should use your initial data
+visualizations to help determine which you feel are best suited to help predict lizard counts.
+You should report the results of your final model in text form (1-2 sentences). If you choose
+to remove outliers during the modeling process, be sure to report how many you removed and
+your justification for doing so.
+
+```{r}
+lizard_npp <- read_csv("./Assignments/week9/jrn_lizard_npp.csv")
+```
+
+##Visualizing Data
+```{r}
+hist_BOER <- ggplot(lizard_npp, aes(x = BOER)) +  
+    geom_histogram() +  
+    theme_bw()
+hist_BOER
+
+hist_LATR <- ggplot(lizard_npp, aes(x = LATR)) +  
+    geom_histogram() +  
+    theme_bw()
+hist_LATR
+
+hist_PRGL <- ggplot(lizard_npp, aes(x = PRGL)) +  
+    geom_histogram() +  
+    theme_bw()
+hist_PRGL
+
+hist_SCBR <- ggplot(lizard_npp, aes(x = SCBR)) +  
+    geom_histogram() +  
+    theme_bw()
+hist_SCBR
+
+bar_season <- ggplot(lizard_npp, aes(x = season)) +  
+    geom_bar() +  
+    theme_bw()
+bar_season
+```
+
+BOER, LATR, and PRGL all seem to have values concentrated on one end with a few number of outliers at the higher end. SCBR has a bit more counts spread out across percentages, though counts are more concentrated between 0-1%. Counts across seasons are fairly balanced, with Fall only seeing slightly more counts.
+
+```{r}
+scatter_BOER <- ggplot(lizard_npp, aes(x = BOER, y = lizard_count)) +  
+    geom_point() +  
+    theme_bw()
+scatter_BOER
+
+scatter_LATR <- ggplot(lizard_npp, aes(x = LATR, y = lizard_count)) +  
+    geom_point() +  
+    theme_bw()
+scatter_LATR
+
+scatter_PRGL <- ggplot(lizard_npp, aes(x = PRGL, y = lizard_count)) +  
+    geom_point() +  
+    theme_bw()
+scatter_PRGL
+
+scatter_SCBR <- ggplot(lizard_npp, aes(x = SCBR, y = lizard_count)) +  
+    geom_point() +  
+    theme_bw()
+scatter_SCBR
+
+boxplot_season <- ggplot(lizard_npp, aes(x = season, y = lizard_count)) +  
+    geom_boxplot() +  
+    theme_bw()
+boxplot_season
+```
+
+Write some sort of overview for this here
+
+##Fitting regression model
+```{r}
+lizard_npp$season <- factor(lizard_npp$season, levels = c("F", "S", "W"))
+
+lizard_count_mod <- glm(lizard_count ~ BOER + LATR + PRGL + SCBR + season, data = lizard_npp,
+                     family = "poisson")
+```
+
+##Evaluating model diagnostics
+```{r}
+summary(lizard_count_mod)
+
+plot(lizard_count_mod)
+
+#remove outliers using rownumbers
+
+lizard_npp_outliers_removed <-  lizard_npp[-c(1, 4, 50),]
+lizard_count_mod_2 <- glm(lizard_count ~ BOER + LATR + PRGL + SCBR + season, data = lizard_npp_outliers_removed,
+                     family = "poisson")
+
+summary(lizard_count_mod_2)
+
+plot(lizard_count_mod_2)
+```
+
+#(3) GitHub customization
+Having created a repository that functions as your homepage on GitHub, go ahead and cus-
+tomize it in whatever way you think is most helpful for you and for future collaborators to
+see. At a minimum, you must include at least one image (it does not need to be a photo of
+you, but it should be properly attributed if you did not take it), a few sentences of text, and
+a hyperlink to another site (e.g., LinkedIn). For this assignment, all you have to do is include
+a hyperlink to your GitHub profile
