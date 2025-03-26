@@ -39,7 +39,10 @@ library(gtsummary)
 library(broom)
 
 lizard_data <- read_csv("./Assignments/week9/jrn_lizard.csv")
-utst_lizards <- filter(lizard_data, spp == "UTST")
+utst_lizards <- lizard_data %>% 
+  filter(spp == "UTST") %>% 
+  filter(zone %in% c('G','C','M','T')) %>% 
+  select(SV_length, zone, sex, tail)
 utst_lizards_clean <- na.omit(utst_lizards)
 ```
 
@@ -47,22 +50,27 @@ utst_lizards_clean <- na.omit(utst_lizards)
 ```{r}
 hist_SV_length <- ggplot(utst_lizards_clean, aes(x = SV_length)) +  
     geom_histogram() +  
-    theme_bw()
+    theme_bw() +
+  ggtitle("Count of lizards for each Snout-to-Vent Length")
+  
 hist_SV_length
 
 bar_sex <- ggplot(utst_lizards_clean, aes(x = sex)) +  
     geom_bar() +  
-    theme_bw()
+    theme_bw() +
+  ggtitle("Count of lizards for each Sex")
 bar_sex
 
 bar_zone <- ggplot(utst_lizards_clean, aes(x = zone)) +  
     geom_bar() +  
-    theme_bw()
+    theme_bw() +
+  ggtitle("Count of lizards in each Zone")
 bar_zone
 
 bar_tail <- ggplot(utst_lizards_clean, aes(x = tail)) +  
     geom_bar() +  
-    theme_bw()
+    theme_bw() + 
+  ggtitle("Count of lizards for each Tail Type")
 bar_tail
 ```
 
@@ -74,28 +82,32 @@ Observations from distributions:
 
 Relationships between predictors (SV_length, Sex, Zone) and the outcome variable (Tail)
 ```{r}
-boxplot_1 <- ggplot(utst_lizards_clean, aes(x = SV_length, y = tail)) +  
+boxplot_1 <- ggplot(utst_lizards_clean, aes(x = tail, y = SV_length)) +  
     geom_boxplot() +  
-    theme_bw()
+    theme_bw() +
+  ggtitle("Range of Snout-to-Vent Length by Tail Type")
 boxplot_1
 
-scatter_2 <- ggplot(utst_lizards_clean, aes(x = sex, y = tail)) +  
-    geom_point() +  
-    theme_bw()
-scatter_2
+boxplot_2 <- ggplot(utst_lizards_clean, aes(x = sex, y = SV_length)) +  
+    geom_boxplot() +  
+    theme_bw() +
+  ggtitle("Range of Snout-to-Vent Length by Sex")
+boxplot_2
 
-scatter_3 <- ggplot(utst_lizards_clean, aes(x = zone, y = tail)) +  
-    geom_point() +  
-    theme_bw()
-scatter_3
+boxplot_3 <- ggplot(utst_lizards_clean, aes(x = zone, y = SV_length)) +  
+    geom_boxplot() +  
+    theme_bw() + 
+  ggtitle("Tail") +
+  ggtitle("Range of Snout-to-Vent Length by Zone")
+boxplot_3
 ```
-The boxplot showing the relationship between SV_length and tail tells us that lizards with both tail classifications cover a similar range of snout to vent length, though their interquartile ranges are slightly different. There are also some indications of outlier values in the data. The scatter plots between sex and tail as well as zone and tail indicate that lizards with a whole tail are found across sexes and vegetation zones.
+These three box plots display the distribution of snout-to-vent (SV) length in lizards, grouped by tail type, sex, and zone. The first plot shows that lizards with B tend to have slightly longer SV lengths than those with whole tails, though the difference is small and both groups include a few outliers. The second plot reveals that juveniles (J) have the shortest SV lengths, while males (M) and females (F) show greater lengths with overlapping ranges:males have a slightly higher median than females. The third plot compares SV length by geographic zone, showing relatively similar distributions in zones C, G, and M, with zone T standing out as having the highest median and upper range of SV lengths. Overall, SV length appears to vary meaningfully by sex and zone, and to a lesser extent by tail condition.
 
 ##Fitting regression model
 ```{r}
 #Set tail type column to be a factor with a reference level of B
 utst_lizards_clean$tail <- factor(utst_lizards_clean$tail, levels = c("B", "W"))
-utst_lizards_clean$sex <- factor(utst_lizards_clean$sex, levels = c("F", "J", "M"))
+utst_lizards_clean$sex <- factor(utst_lizards_clean$sex, levels = c("J", "F", "M"))
 utst_lizards_clean$zone <- factor(utst_lizards_clean$zone, levels = c("C", "G", "M", "T"))
 
 tail_type_mod <- glm(tail ~ SV_length + sex + zone, data = utst_lizards_clean,
@@ -113,7 +125,7 @@ The residual diagnostics indicate a good fit of the logistic regression model. T
 
 ##Intepreting model and communicating results
 
-The results of a logistic regression suggest that the log-odds of a lizard having a whole tail (vs. B tail) significantly decrease with greater Snout-to-Vent length (B = -0.041, p < 0.001). Compared to individuals from reference vegetation zone C, lizards from zone G had significantly lower log-odds of having a whole tail (β = -0.509, p = 0.014). There were no significant differences in the log-odds of white tail presence by sex relative to sex of F or in vegetation zones M and T relative to zone C.
+The results of a logistic regression indicate that the log-odds of having a whole tail significantly decrease with increasing Snout-to-Vent length (B = -0.045, p < 0.001). Compared to lizards in the reference vegetation zone C, lizards in zone G (B = -0.565, p = 0.001) and zone T (B = -0.404, p = 0.025) have significantly lower log-odds of having a whole tail. There is no significant difference in tail status for lizards in zone M (p = 0.063), or between juveniles and either sex (sexF or sexM).
 
 #2 Predictive Figures
 showing the change in probability of a lizard tail being whole as lizard length increases, with
@@ -153,15 +165,20 @@ ggplot(data_fig, aes(x = SV_length, y = probability)) +
        y = "Probability of Having Whole Tail",
        color = "Sex",
        fill = "Sex") +
-  theme_bw()
+  theme_bw() + 
+  ggtitle("Probability of Whole Tail with Change in Lizard Length by Sex")
+```
 
+This figure shows the modeled probability of a lizard having a whole tail as a function of snout-to-vent length, with separate curves for females (F), juveniles (J), and males (M). Across all sex categories, the probability of having a whole tail decreases steadily as lizard length increases. While all three groups follow a similar downward trend, juveniles consistently show a slightly higher probability of a whole tail at larger lengths, whereas females show the lowest probabilities across much of the SV length range. However, the confidence intervals for each group (shaded areas) broadly overlap, alluding to differences between sexes not being statistically significant (which is what was found from the GLM results).
+
+```{r}
 SV_length_vector <- rep(seq(from = 0, to = 90), 4)
 
 # Simulate zone data repeating "C", "G", "M", "T"
 zone_vector <- rep(c("C", "G", "M", "T"), each = length(seq(from = 0, to = 90))) 
   
 # Keep sex constant at "F"
-sex_vector <- rep("F", length(SV_length_vector))
+sex_vector <- rep("J", length(SV_length_vector))
   
 data_pred <-  data.frame(SV_length_vector, zone_vector, sex_vector)
 colnames(data_pred) <- c("SV_length", "zone", "sex")
@@ -177,7 +194,6 @@ data_fig <-  data.frame(data_pred,
 
 # Rename columns.
 colnames(data_fig) <- c("SV_length","zone", "sex", "probability", "se")
-
 #Graph probability of a lizard tail being whole as lizard length increases, with
 #lines colored by zone 
 ggplot(data_fig, aes(x = SV_length, y = probability)) +
@@ -189,8 +205,11 @@ ggplot(data_fig, aes(x = SV_length, y = probability)) +
        y = "Probability of Having Whole Tail",
        color = "Zone",
        fill = "Zone") +
-  theme_bw()
+  theme_bw() + 
+  ggtitle("Probability of Whole Tail with Change in Lizard Length by Zone")
 ```
+
+This figure illustrates how the probability of having a whole tail changes with SV length across four vegetation zones (C = creosotebush shrubland, G = black grama grassland, M = mesquite duneland, T = tarbush shrubland). In all zones, the probability of whole tail declines as lizard length increases. Lizards in Zone C consistently show the highest probability of having a whole tail across the SV length range, while those in Zones G, M, and T have lower probabilities, with Zone G showing the steepest decline. Although the confidence intervals overlap, the separation between the curves indicates potential differences in tail loss patterns by zone.
 
 #(2) Poisson Regression
 
@@ -225,66 +244,55 @@ lizard_npp <- read_csv("./Assignments/week9/jrn_lizard_npp.csv")
 ```{r}
 hist_BOER <- ggplot(lizard_npp, aes(x = BOER)) +  
     geom_histogram() +  
-    theme_bw()
+    theme_bw() + 
+  ggtitle("Count of lizards at varying BOER levels")
 hist_BOER
 
 hist_LATR <- ggplot(lizard_npp, aes(x = LATR)) +  
     geom_histogram() +  
-    theme_bw()
+    theme_bw() +
+  ggtitle("Count of lizards at varying LATR levels")
 hist_LATR
 
 hist_PRGL <- ggplot(lizard_npp, aes(x = PRGL)) +  
     geom_histogram() +  
-    theme_bw()
+    theme_bw() +
+  ggtitle("Count of lizards at varying PRGL levels")
 hist_PRGL
 
 hist_SCBR <- ggplot(lizard_npp, aes(x = SCBR)) +  
     geom_histogram() +  
-    theme_bw()
+    theme_bw() +
+  ggtitle("Count of lizards at varying SCBR levels")
 hist_SCBR
 
 bar_season <- ggplot(lizard_npp, aes(x = season)) +  
     geom_bar() +  
-    theme_bw()
+    theme_bw() +
+  ggtitle("Count of lizards Collected in each Season")
 bar_season
 ```
 
 BOER, LATR, and PRGL all seem to have values concentrated on one end with a few number of outliers at the higher end. SCBR has a bit more counts spread out across percentages, though counts are more concentrated between 0-1%. Counts across seasons are fairly balanced, with Fall only seeing slightly more counts.
 
+Investigating multi-collinearity:
+
 ```{r}
-scatter_BOER <- ggplot(lizard_npp, aes(x = BOER, y = lizard_count)) +  
-    geom_point() +  
-    theme_bw()
-scatter_BOER
-
-scatter_LATR <- ggplot(lizard_npp, aes(x = LATR, y = lizard_count)) +  
-    geom_point() +  
-    theme_bw()
-scatter_LATR
-
-scatter_PRGL <- ggplot(lizard_npp, aes(x = PRGL, y = lizard_count)) +  
-    geom_point() +  
-    theme_bw()
-scatter_PRGL
-
-scatter_SCBR <- ggplot(lizard_npp, aes(x = SCBR, y = lizard_count)) +  
-    geom_point() +  
-    theme_bw()
-scatter_SCBR
-
-boxplot_season <- ggplot(lizard_npp, aes(x = season, y = lizard_count)) +  
-    geom_boxplot() +  
-    theme_bw()
-boxplot_season
+cor.test(lizard_npp$BOER, lizard_npp$LATR)
+cor.test(lizard_npp$BOER, lizard_npp$PRGL)
+cor.test(lizard_npp$BOER, lizard_npp$SCBR, use = "complete.obs")
+cor.test(lizard_npp$LATR, lizard_npp$PRGL)
+cor.test(lizard_npp$LATR, lizard_npp$SCBR, use = "complete.obs")
+cor.test(lizard_npp$PRGL, lizard_npp$SCBR, use = "complete.obs")
 ```
 
-Write some sort of overview for this here
+After checking all the possible pairwise combinations of the species, it looks like LATR and SCBR are the only two species that are not highly correlated with each other (others have correlation values > 0.62) so I will only include these two species in my final model.
 
 ##Fitting regression model
 ```{r}
 lizard_npp$season <- factor(lizard_npp$season, levels = c("F", "S", "W"))
 
-lizard_count_mod <- glm(lizard_count ~ BOER + LATR + PRGL + SCBR + season, data = lizard_npp,
+lizard_count_mod <- glm(lizard_count ~ LATR + SCBR + season, data = lizard_npp,
                      family = "poisson")
 ```
 
@@ -293,17 +301,40 @@ lizard_count_mod <- glm(lizard_count ~ BOER + LATR + PRGL + SCBR + season, data 
 summary(lizard_count_mod)
 
 plot(lizard_count_mod)
+```
 
+Based on the plot of the residuals, point 47 is considered an outlier on the Residuals vs Fitted, Scale-Location, and Residuals vs Leverage plots. Point 1 is also considered an outlier on the Residuals vs Leverage plot. These two points are removed, and I refitted the model on the dataset without the outliers:
+
+```{r}
 #remove outliers using rownumbers
-
-lizard_npp_outliers_removed <-  lizard_npp[-c(1, 4, 50),]
-lizard_count_mod_2 <- glm(lizard_count ~ BOER + LATR + PRGL + SCBR + season, data = lizard_npp_outliers_removed,
+lizard_npp_outliers_removed <-  lizard_npp[-c(1, 47),]
+lizard_count_mod_2 <- glm(lizard_count ~ LATR + SCBR + season, data = lizard_npp_outliers_removed,
                      family = "poisson")
 
 summary(lizard_count_mod_2)
 
 plot(lizard_count_mod_2)
 ```
+
+The model still seems to have slightly non-normal residuals, uneven variance, and a few influential points. Point 48 consistently shows up as an extreme outlier across all three plots, so I will remove this last point and refit the model:
+
+```{r}
+#remove outliers using rownumbers
+lizard_npp_outliers_removed_2 <-  lizard_npp[-c(48),]
+lizard_count_mod_3 <- glm(lizard_count ~ LATR + SCBR + season, data = lizard_npp_outliers_removed_2,
+                     family = "poisson")
+
+summary(lizard_count_mod_3)
+
+plot(lizard_count_mod_3)
+```
+
+The residual plots overall look better. There are now 2 points considered outliers on the Residuals vs Leverage plot, but I am opting to keep those as i've already removed three observations, and the other three plots look more stable with residual residuals appearing more homoscedastic and normally distributed than before.
+
+##Intepreting model and communicating results
+
+The results of a poisson regression suggest that both the winter season (B = -0.027, p = 0.62) and percent cover of creosote bush (B = -0.042, p = 0.20) do not have a strong effect on lizard counts.  However, the summer season does have a significant effect (B = -0.817, p <0.001), and so does the percent cover of burrograss (B = 0.437, p < 0.001). I removed observations 1, 47, and 48 since they appeared as outliers in
+the residual plots and may have skewed data results inaccurately to show higher correlations when in reality they are weaker. Note, these coeﬃcients are for estimation of log-transformed counts.
 
 #(3) GitHub customization
 Having created a repository that functions as your homepage on GitHub, go ahead and cus-
@@ -312,3 +343,5 @@ see. At a minimum, you must include at least one image (it does not need to be a
 you, but it should be properly attributed if you did not take it), a few sentences of text, and
 a hyperlink to another site (e.g., LinkedIn). For this assignment, all you have to do is include
 a hyperlink to your GitHub profile
+
+My GitHub profile: https://github.com/jessalynlc/jessalynlc
